@@ -6,6 +6,7 @@
   "scripts": {
     "start": "webpack-dev-server --env=dev --progress --colors",
     "zip": "webpack --env=production --profile --colors --hide-modules --watch",
+    "zip2": "webpack --env=closure --profile --colors --hide-modules",
     "foo": "concurrently -t \"HH:mm:ss\" -p \"[{name} {time}]\" -n \"dev,zip\" -c \"bgGreen.bold,bgBlue.bold\" \"npm start\" \"npm run zip\""
   },
   "repository": {
@@ -32,6 +33,7 @@
     "raf": "^3.3.2",
     "style-loader": "^0.18.2",
     "webpack": "^3.5.4",
+    "webpack-closure-compiler": "^2.1.5",
     "webpack-dev-server": "^2.7.1",
     "webpack-merge": "^4.1.0",
     "zip-webpack-plugin": "^2.0.0"
