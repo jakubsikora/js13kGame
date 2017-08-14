@@ -34,6 +34,11 @@ module.exports = function () {
       new HtmlWebpackPlugin({
         inject: true,
         template: 'index.ejs',
+        minify: {
+          collapseInlineTagWhitespace: true,
+          collapseWhitespace: true,
+          removeComments: true,
+        }
       }),
     ]
   };

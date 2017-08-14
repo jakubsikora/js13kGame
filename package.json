@@ -6,8 +6,8 @@
   "scripts": {
     "start": "webpack-dev-server --env=dev --progress --colors",
     "zip": "webpack --env=production --profile --colors --hide-modules --watch",
-    "zip2": "webpack --env=closure --profile --colors --hide-modules",
-    "foo": "concurrently -t \"HH:mm:ss\" -p \"[{name} {time}]\" -n \"dev,zip\" -c \"bgGreen.bold,bgBlue.bold\" \"npm start\" \"npm run zip\""
+    "closure": "webpack --env=closure --profile --colors --hide-modules --watch",
+    "dev": "concurrently -t \"HH:mm:ss\" -p \"[{name} {time}]\" -n \"dev,zip\" -c \"bgGreen.bold,bgBlue.bold\" \"npm start\" \"npm run zip\""
   },
   "repository": {
     "type": "git",

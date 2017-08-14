@@ -23,7 +23,7 @@ module.exports = function () {
         compress: {
           warnings: false,
         },
-        sourceMap: true,
+        sourceMap: false,
       }),
       new ZipPlugin({
         filename: 'game.zip',
