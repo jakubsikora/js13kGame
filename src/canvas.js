@@ -1,5 +1,5 @@
 class Canvas {
-  constructor() {
+  constructor(width, height) {
     this.instance = document.getElementById('canvas');
   }
 }
