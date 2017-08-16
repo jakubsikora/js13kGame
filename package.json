@@ -6,6 +6,7 @@
   "scripts": {
     "start": "webpack-dev-server --env=dev --progress --colors",
     "zip": "webpack --env=production --profile --colors --hide-modules --watch",
+    "build": "webpack --env=production --profile --colors --hide-modules",
     "closure": "webpack --env=closure --profile --colors --hide-modules --watch",
     "dev": "concurrently -t \"HH:mm:ss\" -p \"[{name} {time}]\" -n \"dev,zip\" -c \"bgGreen.bold,bgBlue.bold\" \"npm start\" \"npm run zip\""
   },
