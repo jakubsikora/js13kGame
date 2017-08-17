@@ -14,13 +14,25 @@ export default class Tile {
   }
 
   render() {
-    this.ctx.drawImage(
-      this.img,
-      this.x,
-      this.y
-    );
+    if (this.img) {
+      this.ctx.drawImage(
+        this.img,
+        this.x,
+        this.y
+      );
+    } else {
+      // Blank tile
+      this.ctx.beginPath();
+      this.ctx.moveTo(this.centerX, this.y);
+      this.ctx.lineTo(this.x + TILE_WIDTH, this.centerY);
+      this.ctx.lineTo(this.centerX, this.y + TILE_HEIGHT);
+      this.ctx.lineTo(this.x, this.centerY);
+      this.ctx.closePath();
+      this.ctx.strokeStyle = "#FFF";
+      this.ctx.stroke();
+    }
 
-    if (this.hovered) {
+    if (this.hovered && this.img) {
       this.ctx.beginPath();
       this.ctx.moveTo(this.centerX, this.y);
       this.ctx.lineTo(this.x + TILE_WIDTH, this.centerY);
