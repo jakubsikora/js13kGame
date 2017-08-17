@@ -30,10 +30,27 @@ export default class Map {
     this.loadAssets();
     this.loadMap();
 
-    const path = new Path([0, 0], [3, 8]);
-    this.shortestPath = path.findShortestPath(map);
+    let path = new Path([0, 0], [3, 8], map);
+    this.shortestPath = path.findShortestPath();
 
     const that = this;
+
+    canvas.addEventListener('mousedown', e => {
+      const coords = canvas.getBoundingClientRect();
+      const x = e.clientX - coords.left;
+      const y = e.clientY - coords.top;
+
+      this.tiles.forEach(tile => {
+        tile.path = false;
+      });
+
+      this.tiles.forEach(tile => {
+        if (tile.isInside(x, y)) {
+          const path = new Path([0, 0], [tile.gridX, tile.gridY], map);
+          this.shortestPath = path.findShortestPath();
+        }
+      });
+    });
 
     canvas.addEventListener('mousemove', e => {
       const coords = canvas.getBoundingClientRect();
@@ -46,7 +63,7 @@ export default class Map {
         } else {
           tile.hovered = false;
         }
-      })
+      });
     });
   }
 
@@ -89,12 +106,14 @@ export default class Map {
 
   render() {
     this.tiles.forEach(tile => {
-      this.shortestPath.some(t => {
-        if (t[0] === tile.gridX && t[1] === tile.gridY) {
-          tile.path = true;
-          return true;
-        }
-      });
+      if (this.shortestPath) {
+        this.shortestPath.some(t => {
+          if (t[0] === tile.gridX && t[1] === tile.gridY) {
+            tile.path = true;
+            return true;
+          }
+        });
+      }
 
       tile.render();
     });

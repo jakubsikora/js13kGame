@@ -7,12 +7,13 @@ import {
   PATH_LOCATION_STATUS_END } from './constants';
 
 export default class Path {
-  constructor(start, end) {
+  constructor(start, end, grid) {
     this.start = start;
     this.end = end;
+    this.grid = JSON.parse(JSON.stringify(grid));
   }
 
-  findShortestPath(grid) {
+  findShortestPath() {
     const distanceFromTop = this.start[0];
     const distanceFromLeft = this.start[1];
 
@@ -37,7 +38,7 @@ export default class Path {
       const directions = ['N', 'E', 'S', 'W'];
 
       directions.some(dir => {
-        const newLocation = this.exploreInDirection(currentLocation, dir, grid);
+        const newLocation = this.exploreInDirection(currentLocation, dir, this.grid);
 
         if (newLocation.status === PATH_LOCATION_STATUS_END) {
           newPath = newLocation.path;
