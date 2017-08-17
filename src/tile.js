@@ -26,7 +26,7 @@ export default class Tile {
       this.ctx.lineTo(this.x + TILE_WIDTH, this.centerY);
       this.ctx.lineTo(this.centerX, this.y + TILE_HEIGHT);
       this.ctx.lineTo(this.x, this.centerY);
-      this.ctx.lineWidth = 3;
+      this.ctx.lineWidth = 1;
       this.ctx.closePath();
       this.ctx.strokeStyle = "#FF0000";
       this.ctx.stroke();

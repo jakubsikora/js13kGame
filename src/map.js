@@ -14,7 +14,7 @@ const map = [
 ];
 
 const tileGraphicsToLoad = [
-  require('./assets/FloorTileLg.png'),
+  require('./assets/floorTile52x26.png'),
 ];
 
 export default class Map {
