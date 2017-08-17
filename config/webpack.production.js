@@ -11,6 +11,7 @@ function resolve(dir) {
 module.exports = function () {
   return webpackMerge(baseConfig(), {
     output: {
+      filename: '[name]-[hash].js',
       path: resolve('dist/zip'),
     },
     plugins: [
