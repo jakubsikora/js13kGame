@@ -10,12 +10,13 @@ const map = [
   [1,2,2,2,2,2,2,2,1],
   [1,2,2,2,2,2,2,2,1],
   [0,0,2,2,0,2,2,0,0],
-  [1,1,1,1,1,1,1,1,1],
+  [3,3,3,3,3,3,3,3,3],
 ];
 
 const tileGraphicsToLoad = [
   require('./assets/water.png'),
   require('./assets/floorTile52x26.png'),
+  require('./assets/floorTile52x26-min.png'),
 ];
 
 export default class Map {
@@ -96,6 +97,9 @@ export default class Map {
         break;
       case 1:
         tileImg = this.tileGraphics[1];
+        break;
+      case 3:
+        tileImg = this.tileGraphics[2];
         break;
     }
 
