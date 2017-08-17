@@ -3,17 +3,18 @@ import Tile from './tile';
 
 const map = [
   [1,1,1,1,1,1,1,1,1],
-  [1,1,1,1,1,1,1,1,1],
-  [1,1,1,1,1,1,1,1,1],
-  [1,1,1,1,1,1,1,1,1],
-  [1,1,1,1,1,1,1,1,1],
-  [1,1,1,1,1,1,1,1,1],
-  [1,1,1,1,1,1,1,1,1],
-  [1,1,1,1,1,1,1,1,1],
+  [1,0,0,0,0,0,0,0,1],
+  [1,0,0,0,0,0,0,0,1],
+  [1,0,0,0,0,0,0,0,1],
+  [1,0,0,0,0,0,0,0,1],
+  [1,0,0,0,0,0,0,0,1],
+  [1,0,0,0,0,0,0,0,1],
+  [1,0,0,0,0,0,0,0,1],
   [1,1,1,1,1,1,1,1,1],
 ];
 
 const tileGraphicsToLoad = [
+  require('./assets/water.png'),
   require('./assets/floorTile52x26.png'),
 ];
 
@@ -90,8 +91,11 @@ export default class Map {
     let tileImg;
 
     switch (tileType) {
-      case 1:
+      case 0:
         tileImg = this.tileGraphics[0];
+        break;
+      case 1:
+        tileImg = this.tileGraphics[1];
         break;
     }
 
