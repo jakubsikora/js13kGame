@@ -1,39 +1,65 @@
+import { TILE_HEIGHT, TILE_WIDTH } from './constants';
+import Tile from './tile';
+
 const map = [
   [1,1,1,1,1,1,1,1,1],
-  [1,0,0,0,0,0,0,0,1],
-  [1,0,0,0,0,0,0,0,1],
-  [1,0,0,0,0,0,0,0,1],
-  [1,0,0,0,0,0,0,0,1],
-  [1,0,0,0,0,0,0,0,1],
-  [1,0,0,0,0,0,0,0,1],
-  [1,0,0,0,0,0,0,0,1],
+  [1,1,1,1,1,1,1,1,1],
+  [1,1,1,1,1,1,1,1,1],
+  [1,1,1,1,1,1,1,1,1],
+  [1,1,1,1,1,1,1,1,1],
+  [1,1,1,1,1,1,1,1,1],
+  [1,1,1,1,1,1,1,1,1],
+  [1,1,1,1,1,1,1,1,1],
   [1,1,1,1,1,1,1,1,1],
 ];
 
-const TILE_SIZE = 20;
-// Set as your tile pixel sizes, alter if you are using larger tiles.
-const TILE_HEIGHT = 25;
-const TILE_WIDTH = 52;
-
-// mapX and mapY are offsets to make sure we can position the map as we want.
-const mapX = 400;
-const mapY = 300;
-
 const tileGraphicsToLoad = [
-  require('./assets/water.png'),
-  require('./assets/land.png'),
-  require('./assets/ai.png'),
+  require('./assets/FloorTileLg.png'),
 ];
 
 export default class Map {
   constructor(canvas) {
+    this.tiles = [];
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d');
     this.tileGraphics = [];
     this.loaded = false;
     this.loadAssets();
-    this.playerX = 2;
-    this.playerY = 4;
+    this.loadMap();
+
+    const that = this;
+
+    canvas.addEventListener('mousemove', e => {
+      const coords = canvas.getBoundingClientRect();
+      const x = e.clientX - coords.left;
+      const y = e.clientY - coords.top;
+
+      this.tiles.forEach(tile => {
+        if (tile.isInside(x, y)) {
+          tile.hovered = true;
+        } else {
+          tile.hovered = false;
+        }
+      })
+    });
+  }
+
+  loadMap() {
+    // loop through our map and draw out the image represented by the number.
+    for (let i = 0; i < map.length; i++) {
+      for (let j = 0; j < map[i].length; j++) {
+        const { x, y } = this.twoDToIso(i, j);
+        const tileType = map[i][j];
+        const tile = new Tile(
+          this.canvas,
+          x * TILE_HEIGHT + 350, // TODO, map offset
+          y * TILE_HEIGHT + 150,
+          this.getImage(tileType)
+        );
+
+        this.tiles.push(tile);
+      }
+    }
   }
 
   loadAssets() {
@@ -54,75 +80,22 @@ export default class Map {
   }
 
   render() {
-    for (let i = 0; i < map.length; i++) {
-      for (let j = 0; j < map[i].length; j++) {
-        const x = j * TILE_SIZE;
-        const y = i * TILE_SIZE;
-        const tileType = map[i][j];
-
-        this.placeTwoDTile(tileType, x, y);
-
-        if (this.playerX === i && this.playerY === j) {
-          this.placeTwoDTile(2, x, y);
-        }
-      }
-    }
-
-    // loop through our map and draw out the image represented by the number.
-    for (let i = 0; i < map.length; i++) {
-      for (let j = 0; j < map[i].length; j++) {
-        const tileType = map[i][j];
-        const { x, y } = this.twoDToIso(i, j);
-
-        this.placeIsoTile(tileType, x * TILE_HEIGHT, y * TILE_HEIGHT);
-
-        if (this.playerX === i && this.playerY === j) {
-          this.placeIsoTile(2, x * TILE_HEIGHT, (y * TILE_HEIGHT) - TILE_HEIGHT);
-        }
-      }
-    }
+    this.tiles.forEach(tile => {
+      tile.render();
+    });
   }
 
-  placeTwoDTile(tileType, x, y) {
-    switch (tileType) {
-      case 0:
-        this.ctx.fillStyle = '#2196f3';
-        break;
-
-      case 1:
-        this.ctx.fillStyle = '#8bc34a';
-        break;
-
-      case 2:
-        this.ctx.fillStyle = '#ff0000';
-        break;
-    }
-
-    this.ctx.fillRect(x, y, TILE_SIZE, TILE_SIZE);
-  }
-
-  placeIsoTile(tileType, x, y) {
+  // TODO: move to assets class
+  getImage(tileType) {
     let tileImg;
 
     switch (tileType) {
-      case 0:
-        tileImg = this.tileGraphics[0];
-        break;
-
       case 1:
-        tileImg = this.tileGraphics[1];
-        break;
-
-      case 2:
-        tileImg = this.tileGraphics[2];
+        tileImg = this.tileGraphics[0];
         break;
     }
 
-    this.ctx.drawImage(
-      tileImg,
-      x + mapX,
-      y + mapY
-    );
+    return tileImg;
   }
 
   twoDToIso(i, j) {
