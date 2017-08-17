@@ -41,8 +41,10 @@ export default class Path {
         const newLocation = this.exploreInDirection(currentLocation, dir, this.grid);
 
         if (newLocation.status === PATH_LOCATION_STATUS_END) {
-          newPath = newLocation.path;
-          return true;
+          if (!newPath.length
+             || newPath.length && newLocation.path.length < newPath.length) {
+            newPath = newLocation.path;
+          }
         } else if (newLocation.status === PATH_LOCATION_STATUS_VALID) {
           queue.push(newLocation);
         }
