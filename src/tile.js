@@ -1,7 +1,9 @@
 import { TILE_WIDTH, TILE_HEIGHT } from './constants';
 
 export default class Tile {
-  constructor(canvas, x, y, img) {
+  constructor(canvas, x, y, img, gridX, gridY) {
+    this.gridX = gridX;
+    this.gridY = gridY;
     this.ctx = canvas.getContext('2d');
     this.x = x;
     this.y = y;
@@ -11,6 +13,7 @@ export default class Tile {
 
     this.img = img;
     this.hovered = false;
+    this.path = false;
   }
 
   render() {
@@ -42,6 +45,18 @@ export default class Tile {
       this.ctx.closePath();
       this.ctx.strokeStyle = "#FF0000";
       this.ctx.stroke();
+    }
+
+    if (this.path) {
+      this.ctx.beginPath();
+      this.ctx.moveTo(this.centerX, this.y);
+      this.ctx.lineTo(this.x + TILE_WIDTH, this.centerY);
+      this.ctx.lineTo(this.centerX, this.y + TILE_HEIGHT);
+      this.ctx.lineTo(this.x, this.centerY);
+      this.ctx.lineWidth = 1;
+      this.ctx.closePath();
+      this.ctx.fillStyle = "rgba(255, 255, 0, 0.44)";
+      this.ctx.fill();
     }
   }
 

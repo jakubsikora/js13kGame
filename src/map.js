@@ -1,11 +1,12 @@
-import { TILE_HEIGHT, TILE_WIDTH } from './constants';
+import { TILE_HEIGHT, TILE_WIDTH, TILE_TYPE_PATH } from './constants';
 import Tile from './tile';
+import Path from './path';
 
 const map = [
   [1,1,1,1,1,1,1,1,1],
-  [1,2,2,2,2,2,2,2,1],
-  [1,2,2,2,2,2,2,2,1],
-  [1,2,2,2,2,2,2,2,1],
+  [1,2,2,2,1,2,2,2,1],
+  [1,2,2,2,1,2,2,2,1],
+  [1,2,2,2,1,1,1,1,1],
   [1,2,2,2,2,2,2,2,1],
   [1,2,2,2,2,2,2,2,1],
   [1,2,2,2,2,2,2,2,1],
@@ -28,6 +29,9 @@ export default class Map {
     this.loaded = false;
     this.loadAssets();
     this.loadMap();
+
+    const path = new Path([0, 0], [3, 8]);
+    this.shortestPath = path.findShortestPath(map);
 
     const that = this;
 
@@ -56,7 +60,9 @@ export default class Map {
           this.canvas,
           x * TILE_HEIGHT + 350, // TODO, map offset
           y * TILE_HEIGHT + 150,
-          this.getImage(tileType)
+          this.getImage(tileType),
+          i,
+          j
         );
 
         this.tiles.push(tile);
@@ -83,6 +89,13 @@ export default class Map {
 
   render() {
     this.tiles.forEach(tile => {
+      this.shortestPath.some(t => {
+        if (t[0] === tile.gridX && t[1] === tile.gridY) {
+          tile.path = true;
+          return true;
+        }
+      });
+
       tile.render();
     });
   }
@@ -95,7 +108,7 @@ export default class Map {
       case 2:
         tileImg = this.tileGraphics[0];
         break;
-      case 1:
+      case TILE_TYPE_PATH:
         tileImg = this.tileGraphics[1];
         break;
       case 3:
