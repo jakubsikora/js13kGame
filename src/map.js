@@ -4,30 +4,24 @@ import Path from './path';
 
 const map = [
   [1,1,1,1,1,1,1,1,1],
-  [1,2,2,2,1,2,2,2,1],
-  [1,2,2,2,1,2,2,2,1],
-  [1,2,2,2,1,1,1,1,1],
-  [1,2,2,2,2,2,2,2,1],
-  [1,2,2,2,2,2,2,2,1],
-  [1,2,2,2,2,2,2,2,1],
-  [0,0,2,2,0,2,2,0,0],
-  [3,3,3,3,3,3,3,3,3],
-];
-
-const tileGraphicsToLoad = [
-  require('./assets/water.png'),
-  require('./assets/floorTile52x26.png'),
-  require('./assets/floorTile52x26-min.png'),
+  [1,0,0,0,1,0,0,0,1],
+  [1,0,0,0,1,0,0,0,1],
+  [1,0,0,0,1,1,1,1,1],
+  [1,0,0,0,0,0,0,0,1],
+  [1,0,0,0,0,0,0,0,1],
+  [1,0,0,0,0,0,0,0,1],
+  [0,0,0,0,0,0,0,0,0],
+  [1,1,1,1,1,1,1,1,1],
 ];
 
 export default class Map {
-  constructor(canvas) {
+  constructor(canvas, assets) {
     this.tiles = [];
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d');
     this.tileGraphics = [];
-    this.loaded = false;
-    this.loadAssets();
+    this.assets = assets;
+
     this.loadMap();
 
     let path = new Path([0, 0], [3, 8], map);
@@ -77,29 +71,12 @@ export default class Map {
           this.canvas,
           x * TILE_HEIGHT + 350, // TODO, map offset
           y * TILE_HEIGHT + 150,
-          this.getImage(tileType),
+          this.assets.getImageByType(tileType),
           i,
           j
         );
 
         this.tiles.push(tile);
-      }
-    }
-  }
-
-  loadAssets() {
-    let tileGraphicsLoaded = 0;
-
-    for (let i = 0; i < tileGraphicsToLoad.length; i++) {
-      this.tileGraphics[i] = new Image();
-      this.tileGraphics[i].src = tileGraphicsToLoad[i];
-
-      this.tileGraphics[i].onload = () => {
-        tileGraphicsLoaded++;
-
-        if (tileGraphicsLoaded === tileGraphicsToLoad.length) {
-          this.loaded = true;
-        }
       }
     }
   }
@@ -117,25 +94,6 @@ export default class Map {
 
       tile.render();
     });
-  }
-
-  // TODO: move to assets class
-  getImage(tileType) {
-    let tileImg;
-
-    switch (tileType) {
-      case 2:
-        tileImg = this.tileGraphics[0];
-        break;
-      case TILE_TYPE_PATH:
-        tileImg = this.tileGraphics[1];
-        break;
-      case 3:
-        tileImg = this.tileGraphics[2];
-        break;
-    }
-
-    return tileImg;
   }
 
   twoDToIso(i, j) {

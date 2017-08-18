@@ -6,3 +6,7 @@ export const PATH_LOCATION_STATUS_VALID = 'Valid';
 export const PATH_LOCATION_STATUS_BLOCKED = 'Blocked';
 export const PATH_LOCATION_STATUS_VISITED = 'Visited';
 export const PATH_LOCATION_STATUS_END = 'End';
+
+// Assets
+export const ASSETS_NAME_FLOOR = 'Floor';
+export const ASSETS_NAME_CHARACTER = 'Character';
