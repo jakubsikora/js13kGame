@@ -52,7 +52,14 @@ export default class Path {
     }
 
     // No valid path found
-    return newPath.length ? this.generateForGrid(newPath) : false;
+    if (newPath.length) {
+      return {
+        directions: newPath,
+        grid: this.generateForGrid(newPath),
+      };
+    }
+
+    return false;
   }
 
   generateForGrid(newPath) {

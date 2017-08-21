@@ -27,7 +27,7 @@ export default class Player {
     this.ticksPerFrame = 10;
     this.numberOfFrames = 4;
     this.animate = true;
-    this.path = [];
+    this.path = null;
     this.currentTile = [];
 
     this.directionMap = {
@@ -58,6 +58,17 @@ export default class Player {
     };
 
     this.setEventHandlers();
+
+    // TODO: fix this
+    this.currentTile = map.getTile(
+      this.realPosition[0],
+      this.realPosition[1],
+    );
+    this.x = this.currentTile.centerX - (this.w / 2);
+    this.y = this.currentTile.centerY - this.h;
+
+    this.nextTile = null;
+    this.walking = false;
   }
 
   get realPosition() {
@@ -91,6 +102,7 @@ export default class Player {
 
           if (this.path) {
             this.followPath();
+            this.walking = true;
           }
         }
       });
@@ -98,51 +110,67 @@ export default class Player {
   }
 
   followPath() {
-    // put player on the tile center for now
-    this.x = this.currentTile.centerX - (this.w / 2);
-    this.y = this.currentTile.centerY - this.h;
+    if (this.walking) {
+      const currentTile = map
+        .getTile(this.realPosition[0], this.realPosition[1]);
 
-    this.path.shift();
+      console.log('comparing', currentTile.gridX, this.nextTile[0], currentTile.gridY, this.nextTile[1]);
+      if (currentTile.gridX === this.nextTile[0]
+          && currentTile.gridY === this.nextTile[1]) {
+        const direction = this.path.directions.shift();
+        const nextTile = this.path.grid.shift();
 
-    this.path.forEach(p => {
-      const nextDirection = this.findDirection(
-        this.realPosition, [p.centerX, p.centerY]);
-
-      this.direction = 'E';
-    });
-  }
-
-  findDirection(start, end) {
-    console.log(start, end);
-    return 'E';
+        if (!nextTile) {
+          this.walking = false;
+        } else {
+          this.direction = direction;
+          this.nextTile = nextTile;
+        }
+      }
+    } else {
+      this.direction = this.path.directions.shift();
+      this.nextTile = this.path.grid.shift();
+    }
   }
 
   update() {
     let pressed = false;
 
-    if (keys.isPressed('ArrowUp')) {
-      this.y -= 1;
-      this.direction = 'N';
-      pressed = true;
+    if (this.walking) {
+      if (this.direction === 'S') {
+        this.x += 1;
+        this.y += 0.5;
+        this.followPath();
+      }
     }
 
-    if (keys.isPressed('ArrowDown')) {
-      this.y += 1;
-      this.direction = 'S';
-      pressed = true;
-    }
+    // if (keys.isPressed('ArrowUp')) {
+    //   this.x -= 1;
+    //   this.y -= 0.5;
+    //   this.direction = 'N';
+    //   pressed = true;
+    // }
 
-    if (keys.isPressed('ArrowLeft')) {
-      this.x -= 1;
-      this.direction = 'W';
-      pressed = true;
-    }
+    // if (keys.isPressed('ArrowDown')) {
+    //   this.x += 1;
+    //   this.y += 0.5;
+    //   this.direction = 'S';
+    //   pressed = true;
+    // }
 
-    if (keys.isPressed('ArrowRight')) {
-      this.x += 1;
-      this.direction = 'E';
-      pressed = true;
-    }
+    // if (keys.isPressed('ArrowLeft')) {
+    //   this.x -= 1;
+    //   this.y += 0.5;
+    //   this.direction = 'W';
+    //   pressed = true;
+    // }
+
+    // if (keys.isPressed('ArrowRight')) {
+    //   this.x += 1;
+    //   this.y -= 0.5;
+    //   this.direction = 'E';
+    //   pressed = true;
+    // }
 
     this.tickCount += 1;
 
@@ -168,7 +196,7 @@ export default class Player {
 
     if (this.path) {
       map.tiles.forEach(tile => {
-        this.path.some(t => {
+        this.path.grid.some(t => {
           if (t[0] === tile.gridX && t[1] === tile.gridY) {
             tile.path = true;
             return true;
@@ -180,8 +208,8 @@ export default class Player {
     }
 
     this.currentTile = map.getTile(
-      this.x + (this.w / 2),
-      this.y + this.h,
+      this.realPosition[0],
+      this.realPosition[1],
     );
   }
 
