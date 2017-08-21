@@ -42,7 +42,7 @@ export default class Path {
 
         if (newLocation.status === PATH_LOCATION_STATUS_END) {
           if (!newPath.length
-             || newPath.length && newLocation.path.length < newPath.length) {
+             || (newPath.length && newLocation.path.length < newPath.length)) {
             newPath = newLocation.path;
           }
         } else if (newLocation.status === PATH_LOCATION_STATUS_VALID) {

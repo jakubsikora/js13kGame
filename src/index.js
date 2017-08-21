@@ -1,7 +1,7 @@
 import raf from 'raf';
 import canvas from './canvas';
 import keys from './keys';
-import Map from './map';
+import map from './map';
 import assets from './assets';
 import Player from './player';
 
@@ -14,11 +14,13 @@ class Game {
     this.ctx = canvas.getContext('2d');
     this.assets = assets;
 
-    this.map = new Map(canvas, this.assets);
+    this.map = map;
     this.map.load();
     this.loaded = this.assets.loaded;
 
     this.player = new Player(canvas.width / 2, canvas.height / 2, this.map);
+
+    this.setEventHandlers();
   }
 
   start() {
@@ -42,6 +44,10 @@ class Game {
     this.ctx.fillRect(0, 0, canvas.width, canvas.height);
     this.map.render();
     this.player.render();
+  }
+
+  setEventHandlers() {
+
   }
 }
 
