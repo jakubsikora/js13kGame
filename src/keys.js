@@ -1,6 +1,6 @@
-export default class Keys {
+class Keys {
   constructor() {
-    this.pressedKeys = {};
+    this.pressed = {};
 
     const addEventListener = window.addEventListener;
     addEventListener('keydown', this.keydownEventHandler.bind(this));
@@ -8,14 +8,16 @@ export default class Keys {
   }
 
   keydownEventHandler(e) {
-    this.pressedKeys[e.key] = true;
+    this.pressed[e.key] = true;
   }
 
   keyupEventHandler(e) {
-    this.pressedKeys[e.key] = false;
+    this.pressed[e.key] = false;
   }
 
   isPressed(key) {
-    return !!this.pressedKeys[key];
+    return !!this.pressed[key];
   }
 }
+
+export default new Keys();

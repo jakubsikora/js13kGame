@@ -27,7 +27,10 @@ module.exports = function () {
         exclude: /node_modules/,
       }, {
         test: /\.(png|jpg|ttf|woff|svg|otf|eot|svg).*?$/,
-        loader: 'file-loader'
+        loader: 'file-loader',
+        options: {
+          name: '[sha512:hash:base64:3].[ext]',
+        }
       }]
     },
     plugins: [
@@ -38,6 +41,7 @@ module.exports = function () {
           collapseInlineTagWhitespace: true,
           collapseWhitespace: true,
           removeComments: true,
+          minifyCSS: true,
         }
       }),
     ]

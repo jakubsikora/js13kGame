@@ -1,18 +1,6 @@
-import { TILE_HEIGHT, TILE_WIDTH, TILE_TYPE_PATH } from './constants';
+import { TILE_HEIGHT, TILE_WIDTH } from './constants';
 import Tile from './tile';
 import Path from './path';
-
-const map = [
-  [1,1,1,1,1,1,1,1,1],
-  [1,0,0,0,1,0,0,0,1],
-  [1,0,0,0,1,0,0,0,1],
-  [1,0,0,0,1,1,1,1,1],
-  [1,0,0,0,0,0,0,0,1],
-  [1,0,0,0,0,0,0,0,1],
-  [1,0,0,0,0,0,0,0,1],
-  [0,0,0,0,0,0,0,0,0],
-  [1,1,1,1,1,1,1,1,1],
-];
 
 export default class Map {
   constructor(canvas, assets) {
@@ -21,13 +9,9 @@ export default class Map {
     this.ctx = canvas.getContext('2d');
     this.tileGraphics = [];
     this.assets = assets;
-
-    this.loadMap();
-
-    let path = new Path([0, 0], [3, 8], map);
-    this.shortestPath = path.findShortestPath();
-
-    const that = this;
+    this.map = [];
+    this.rows = 20;
+    this.cols = 20;
 
     canvas.addEventListener('mousedown', e => {
       const coords = canvas.getBoundingClientRect();
@@ -40,7 +24,7 @@ export default class Map {
 
       this.tiles.forEach(tile => {
         if (tile.isInside(x, y)) {
-          const path = new Path([0, 0], [tile.gridX, tile.gridY], map);
+          const path = new Path([0, 0], [tile.gridX, tile.gridY], this.map);
           this.shortestPath = path.findShortestPath();
         }
       });
@@ -61,19 +45,25 @@ export default class Map {
     });
   }
 
-  loadMap() {
+  load() {
+    this.generate();
+
+    const offsetX = (this.canvas.width / 2) - (TILE_WIDTH / 2);
+    const offsetY = (this.canvas.height - (TILE_HEIGHT * this.rows)) / 2;
+
     // loop through our map and draw out the image represented by the number.
-    for (let i = 0; i < map.length; i++) {
-      for (let j = 0; j < map[i].length; j++) {
+    for (let i = 0; i < this.map.length; i++) {
+      for (let j = 0; j < this.map[i].length; j++) {
         const { x, y } = this.twoDToIso(i, j);
-        const tileType = map[i][j];
+        const tileType = this.map[i][j];
+
         const tile = new Tile(
           this.canvas,
-          x * TILE_HEIGHT + 350, // TODO, map offset
-          y * TILE_HEIGHT + 150,
-          this.assets.getImageByType(tileType),
+          (x * TILE_HEIGHT) + offsetX, // (this.cols / 2 * TILE_WIDTH) - TILE_WIDTH,
+          (y * TILE_HEIGHT) + offsetY,
+          this.assets.getByType(tileType),
           i,
-          j
+          j,
         );
 
         this.tiles.push(tile);
@@ -89,6 +79,8 @@ export default class Map {
             tile.path = true;
             return true;
           }
+
+          return false;
         });
       }
 
@@ -99,7 +91,17 @@ export default class Map {
   twoDToIso(i, j) {
     return {
       x: i - j,
-      y: (i + j) / 2
+      y: (i + j) / 2,
     };
+  }
+
+  generate() {
+    for (let x = 0; x < this.rows; x++) {
+      this.map.push([]);
+
+      for (let y = 0; y < this.cols; y++) {
+        this.map[x].push(1);
+      }
+    }
   }
 }

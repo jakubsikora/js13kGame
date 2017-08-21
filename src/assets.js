@@ -1,17 +1,16 @@
 import {
-  ASSETS_NAME_FLOOR,
-  ASSETS_NAME_CHARACTER,
-  TILE_TYPE_PATH,
+  A_FLOOR,
+  A_CHARACTER,
 } from './constants';
 
-export default class Assets {
+class Assets {
   constructor() {
     this.items = [{
-      name: ASSETS_NAME_FLOOR,
+      name: A_FLOOR,
       src: require('./assets/floor.png'),
-      type: TILE_TYPE_PATH,
+      type: 1,
     }, {
-      name: ASSETS_NAME_CHARACTER,
+      name: A_CHARACTER,
       src: require('./assets/character.png'),
     }];
 
@@ -20,10 +19,11 @@ export default class Assets {
   }
 
   load() {
+    console.log('loading assets');
     let itemsLoaded = 0;
 
     for (let i = 0; i < this.items.length; i++) {
-      this.loadedItems[i] = { ...this.items[i], img: new Image()};
+      this.loadedItems[i] = { ...this.items[i], img: new Image() };
       this.loadedItems[i].img.src = this.items[i].src;
 
       this.loadedItems[i].img.onload = () => {
@@ -32,13 +32,24 @@ export default class Assets {
         if (itemsLoaded === this.loadedItems.length) {
           this.loaded = true;
         }
-      }
+      };
     }
   }
 
-  getImageByType(type) {
-    const image = this.loadedItems.filter(item => {
-      return item.type === type;
-    })[0];
+  getByType(type) {
+    const image = this.loadedItems.filter(item => item.type === type)[0];
+
+    return image ? image.img : null;
+  }
+
+  getByName(name) {
+    const image = this.loadedItems.filter(item => item.name === name)[0];
+
+    return image ? image.img : null;
   }
 }
+
+const assets = new Assets();
+assets.load();
+
+export default assets;
