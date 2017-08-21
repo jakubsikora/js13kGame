@@ -20,6 +20,11 @@ export default class Player {
     this.map = map;
     this.direction = 'N';
     this.image = assets.getByName(A_CHARACTER);
+    this.frameIndex = 0;
+    this.tickCount = 0;
+    this.ticksPerFrame = 10;
+    this.numberOfFrames = 4;
+    this.animate = true;
 
     this.directionMap = {
       S: {
@@ -76,7 +81,19 @@ export default class Player {
       pressed = true;
     }
 
+    this.tickCount += 1;
+
     if (pressed) {
+      if (this.tickCount > this.ticksPerFrame) {
+        this.tickCount = 0;
+
+        if (this.frameIndex < this.numberOfFrames - 1) {
+          this.frameIndex += 1;
+        } else {
+          this.frameIndex = 0;
+        }
+      }
+
       this.map.tiles.forEach(tile => {
         if (tile.isInside(this.x + (this.w / 2), this.y + (this.h / 2))) {
           tile.playerOn = true;
@@ -99,7 +116,7 @@ export default class Player {
 
     this.ctx.drawImage(
       this.image,
-      this.directionCoords.x,
+      this.directionCoords.x + (this.frameIndex * this.directionCoords.w),
       this.directionCoords.y,
       this.directionCoords.w,
       this.directionCoords.h,
