@@ -43,13 +43,13 @@ export default class Player {
         x: 0,
         y: 0 + (IMAGE_HEIGHT / 4),
       },
-      W: {
+      E: {
         w: IMAGE_WIDTH / 4,
         h: IMAGE_HEIGHT / 4,
         x: 0,
         y: 0 + (2 * (IMAGE_HEIGHT / 4)),
       },
-      E: {
+      W: {
         w: IMAGE_WIDTH / 4,
         h: IMAGE_HEIGHT / 4,
         x: 0,
@@ -69,6 +69,7 @@ export default class Player {
 
     this.nextTile = null;
     this.walking = false;
+    this.updatePath = false;
   }
 
   get realPosition() {
@@ -101,8 +102,7 @@ export default class Player {
           this.path = path.findShortestPath();
 
           if (this.path) {
-            this.followPath();
-            this.walking = true;
+            this.updatePath = true;
           }
         }
       });
@@ -110,37 +110,57 @@ export default class Player {
   }
 
   followPath() {
-    if (this.walking) {
-      const currentTile = map
-        .getTile(this.realPosition[0], this.realPosition[1]);
+    if (!this.nextTile) return;
+    const currentTile = map
+      .getTile(this.realPosition[0], this.realPosition[1]);
 
-      console.log('comparing', currentTile.gridX, this.nextTile[0], currentTile.gridY, this.nextTile[1]);
-      if (currentTile.gridX === this.nextTile[0]
-          && currentTile.gridY === this.nextTile[1]) {
-        const direction = this.path.directions.shift();
-        const nextTile = this.path.grid.shift();
-
-        if (!nextTile) {
-          this.walking = false;
-        } else {
-          this.direction = direction;
-          this.nextTile = nextTile;
-        }
-      }
+    console.log('comparing', currentTile.gridX, this.nextTile[0], currentTile.gridY, this.nextTile[1]);
+    if (currentTile.gridX === this.nextTile[0]
+        && currentTile.gridY === this.nextTile[1]
+        && currentTile.centerX === this.realPosition[0]
+        && currentTile.centerY === this.realPosition[1]) {
+      this.updatePath = true;
     } else {
-      this.direction = this.path.directions.shift();
-      this.nextTile = this.path.grid.shift();
+      this.updatePath = false;
     }
   }
 
   update() {
-    let pressed = false;
+    this.followPath();
+
+    if (this.updatePath) {
+      const direction = this.path.directions.shift();
+      const nextTile = this.path.grid.shift();
+
+      if (!direction) {
+        this.walking = false;
+        this.updatePath = false;
+      } else {
+        this.walking = true;
+        this.direction = direction;
+        this.nextTile = nextTile;
+      }
+    }
 
     if (this.walking) {
       if (this.direction === 'S') {
         this.x += 1;
         this.y += 0.5;
-        this.followPath();
+      }
+
+      if (this.direction === 'N') {
+        this.x -= 1;
+        this.y -= 0.5;
+      }
+
+      if (this.direction === 'E') {
+        this.x -= 1;
+        this.y += 0.5;
+      }
+
+      if (this.direction === 'W') {
+        this.x += 1;
+        this.y -= 0.5;
       }
     }
 
@@ -174,7 +194,7 @@ export default class Player {
 
     this.tickCount += 1;
 
-    if (pressed) {
+    if (this.walking) {
       if (this.tickCount > this.ticksPerFrame) {
         this.tickCount = 0;
 

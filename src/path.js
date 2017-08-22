@@ -65,7 +65,7 @@ export default class Path {
   generateForGrid(newPath) {
     const path = [];
 
-    path.push(this.start);
+    // path.push(this.start);
 
     let currentPath = this.start;
 
