@@ -29,6 +29,8 @@ export default class Player {
     this.animate = true;
     this.path = null;
     this.currentTile = [];
+    this.changePath = false;
+    this.tempPath = null;
 
     this.directionMap = {
       S: {
@@ -88,21 +90,33 @@ export default class Player {
 
       map.tiles.forEach(tile => {
         if (tile.isInside(x, y)) {
-          const playerTile = map.getTile(
-            this.x + (this.w / 2),
-            this.y + this.h,
-          );
-
-          const path = new Path(
-            [playerTile.gridX, playerTile.gridY],
-            [tile.gridX, tile.gridY],
-            this.map.grid,
-          );
-
-          this.path = path.findShortestPath();
-
           if (this.path) {
-            this.updatePath = true;
+            this.changePath = true;
+
+            const tempPath = new Path(
+              [this.nextTile[0], this.nextTile[1]],
+              [tile.gridX, tile.gridY],
+              this.map.grid,
+            );
+
+            this.tempPath = tempPath.findShortestPath();
+          } else {
+            const playerTile = map.getTile(
+              this.x + (this.w / 2),
+              this.y + this.h,
+            );
+
+            const path = new Path(
+              [playerTile.gridX, playerTile.gridY],
+              [tile.gridX, tile.gridY],
+              this.map.grid,
+            );
+
+            this.path = path.findShortestPath();
+
+            if (this.path) {
+              this.updatePath = true;
+            }
           }
         }
       });
@@ -114,12 +128,18 @@ export default class Player {
     const currentTile = map
       .getTile(this.realPosition[0], this.realPosition[1]);
 
-    console.log('comparing', currentTile.gridX, this.nextTile[0], currentTile.gridY, this.nextTile[1]);
     if (currentTile.gridX === this.nextTile[0]
         && currentTile.gridY === this.nextTile[1]
         && currentTile.centerX === this.realPosition[0]
         && currentTile.centerY === this.realPosition[1]) {
       this.updatePath = true;
+
+      if (this.changePath) {
+        this.path = { ...this.tempPath };
+        this.tempPath = null;
+        this.changePath = false;
+        this.map.tiles.forEach(tile => tile.path = false);
+      }
     } else {
       this.updatePath = false;
     }
@@ -163,34 +183,6 @@ export default class Player {
         this.y -= 0.5;
       }
     }
-
-    // if (keys.isPressed('ArrowUp')) {
-    //   this.x -= 1;
-    //   this.y -= 0.5;
-    //   this.direction = 'N';
-    //   pressed = true;
-    // }
-
-    // if (keys.isPressed('ArrowDown')) {
-    //   this.x += 1;
-    //   this.y += 0.5;
-    //   this.direction = 'S';
-    //   pressed = true;
-    // }
-
-    // if (keys.isPressed('ArrowLeft')) {
-    //   this.x -= 1;
-    //   this.y += 0.5;
-    //   this.direction = 'W';
-    //   pressed = true;
-    // }
-
-    // if (keys.isPressed('ArrowRight')) {
-    //   this.x += 1;
-    //   this.y -= 0.5;
-    //   this.direction = 'E';
-    //   pressed = true;
-    // }
 
     this.tickCount += 1;
 
