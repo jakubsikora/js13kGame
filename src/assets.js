@@ -19,7 +19,6 @@ class Assets {
   }
 
   load() {
-    console.log('loading assets');
     let itemsLoaded = 0;
 
     for (let i = 0; i < this.items.length; i++) {

@@ -19,6 +19,8 @@ class Game {
     this.loaded = this.assets.loaded;
 
     this.player = new Player(canvas.width / 2, canvas.height / 2, this.map);
+    this.players = [];
+    this.players.push(this.player);
 
     this.setEventHandlers();
   }
@@ -47,7 +49,21 @@ class Game {
   }
 
   setEventHandlers() {
+    canvas.addEventListener('mousedown', e => {
+      const coords = canvas.getBoundingClientRect();
+      const x = e.clientX - coords.left;
+      const y = e.clientY - coords.top;
 
+      map.tiles.forEach(tile => {
+        if (tile.isInside(x, y)) {
+          this.players.forEach(player => {
+            if (player.insideTile(tile)) {
+              player.selected = !player.selected;
+            }
+          });
+        }
+      });
+    });
   }
 }
 

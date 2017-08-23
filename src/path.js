@@ -14,6 +14,7 @@ export default class Path {
   }
 
   findShortestPath() {
+    if (this.start[0] === this.end[0] && this.start[1] === this.end[1]) return false;
     const distanceFromTop = this.start[0];
     const distanceFromLeft = this.start[1];
 

@@ -26,11 +26,11 @@ export default class Player {
     this.tickCount = 0;
     this.ticksPerFrame = 10;
     this.numberOfFrames = 4;
-    this.animate = true;
     this.path = null;
     this.currentTile = [];
     this.changePath = false;
     this.tempPath = null;
+    this.selected = false;
 
     this.directionMap = {
       S: {
@@ -80,6 +80,8 @@ export default class Player {
 
   setEventHandlers() {
     canvas.addEventListener('mousedown', e => {
+      if (!this.selected) return;
+
       const coords = canvas.getBoundingClientRect();
       const x = e.clientX - coords.left;
       const y = e.clientY - coords.top;
@@ -101,13 +103,8 @@ export default class Player {
 
             this.tempPath = tempPath.findShortestPath();
           } else {
-            const playerTile = map.getTile(
-              this.x + (this.w / 2),
-              this.y + this.h,
-            );
-
             const path = new Path(
-              [playerTile.gridX, playerTile.gridY],
+              [this.playerTile.gridX, this.playerTile.gridY],
               [tile.gridX, tile.gridY],
               this.map.grid,
             );
@@ -121,6 +118,18 @@ export default class Player {
         }
       });
     });
+  }
+
+  get playerTile() {
+    return map.getTile(
+      this.realPosition[0],
+      this.realPosition[1],
+    );
+  }
+
+  insideTile(tile) {
+    return (tile.gridX === this.playerTile.gridX
+      && tile.gridY === this.playerTile.gridY);
   }
 
   followPath() {
@@ -148,7 +157,7 @@ export default class Player {
   update() {
     this.followPath();
 
-    if (this.updatePath) {
+    if (this.updatePath && this.path.directions) {
       const direction = this.path.directions.shift();
       const nextTile = this.path.grid.shift();
 
@@ -196,17 +205,18 @@ export default class Player {
           this.frameIndex = 0;
         }
       }
-
-      this.map.tiles.forEach(tile => {
-        if (tile.isInside(this.x + (this.w / 2), this.y + this.h)) {
-          tile.playerOn = true;
-        } else {
-          tile.playerOn = false;
-        }
-      });
     }
 
-    if (this.path) {
+    this.map.tiles.forEach(tile => {
+      if (tile.isInside(this.realPosition[0], this.realPosition[1])
+        && this.selected) {
+        tile.playerOn = true;
+      } else {
+        tile.playerOn = false;
+      }
+    });
+
+    if (this.path && this.path.directions) {
       map.tiles.forEach(tile => {
         this.path.grid.some(t => {
           if (t[0] === tile.gridX && t[1] === tile.gridY) {
