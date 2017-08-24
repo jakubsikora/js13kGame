@@ -80,43 +80,41 @@ export default class Player {
 
   setEventHandlers() {
     canvas.addEventListener('mousedown', e => {
-      if (!this.selected) return;
+      // const coords = canvas.getBoundingClientRect();
+      // const x = e.clientX - coords.left;
+      // const y = e.clientY - coords.top;
 
-      const coords = canvas.getBoundingClientRect();
-      const x = e.clientX - coords.left;
-      const y = e.clientY - coords.top;
+      // map.tiles.forEach(tile => {
+      //   tile.path = false;
+      // });
 
-      map.tiles.forEach(tile => {
-        tile.path = false;
-      });
+      // map.tiles.forEach(tile => {
+      //   if (tile.isInside(x, y)) {
+      //     if (this.path) {
+      //       this.changePath = true;
 
-      map.tiles.forEach(tile => {
-        if (tile.isInside(x, y)) {
-          if (this.path) {
-            this.changePath = true;
+      //       const tempPath = new Path(
+      //         [this.nextTile[0], this.nextTile[1]],
+      //         [tile.gridX, tile.gridY],
+      //         this.map.grid,
+      //       );
 
-            const tempPath = new Path(
-              [this.nextTile[0], this.nextTile[1]],
-              [tile.gridX, tile.gridY],
-              this.map.grid,
-            );
+      //       this.tempPath = tempPath.findShortestPath();
+      //     } else {
+      //       const path = new Path(
+      //         [this.playerTile.gridX, this.playerTile.gridY],
+      //         [tile.gridX, tile.gridY],
+      //         this.map.grid,
+      //       );
 
-            this.tempPath = tempPath.findShortestPath();
-          } else {
-            const path = new Path(
-              [this.playerTile.gridX, this.playerTile.gridY],
-              [tile.gridX, tile.gridY],
-              this.map.grid,
-            );
+      //       this.path = path.findShortestPath();
 
-            this.path = path.findShortestPath();
-
-            if (this.path) {
-              this.updatePath = true;
-            }
-          }
-        }
-      });
+      //       if (this.path) {
+      //         this.updatePath = true;
+      //       }
+      //     }
+      //   }
+      // });
     });
   }
 
@@ -143,7 +141,7 @@ export default class Player {
         && currentTile.centerY === this.realPosition[1]) {
       this.updatePath = true;
 
-      if (this.changePath) {
+      if (this.changePath && this.selected) {
         this.path = { ...this.tempPath };
         this.tempPath = null;
         this.changePath = false;
@@ -157,9 +155,13 @@ export default class Player {
   update() {
     this.followPath();
 
-    if (this.updatePath && this.path.directions) {
-      const direction = this.path.directions.shift();
-      const nextTile = this.path.grid.shift();
+    if (this.updatePath) {
+      const direction = this.path.directions
+        ? this.path.directions.shift()
+        : null;
+      const nextTile = this.path.grid
+        ? this.path.grid.shift()
+        : null;
 
       if (!direction) {
         this.walking = false;
@@ -207,15 +209,6 @@ export default class Player {
       }
     }
 
-    this.map.tiles.forEach(tile => {
-      if (tile.isInside(this.realPosition[0], this.realPosition[1])
-        && this.selected) {
-        tile.playerOn = true;
-      } else {
-        tile.playerOn = false;
-      }
-    });
-
     if (this.path && this.path.directions) {
       map.tiles.forEach(tile => {
         this.path.grid.some(t => {
@@ -237,6 +230,19 @@ export default class Player {
 
   render() {
     this.directionCoords = this.directionMap[this.direction];
+
+    if (this.selected) {
+      this.ctx.beginPath();
+      this.ctx.arc(
+        this.realPosition[0],
+        this.realPosition[1] - this.h - 10,
+        3,
+        0,
+        2 * Math.PI,
+      );
+      this.ctx.fillStyle = 'rgba(244, 67, 54, 0.7)';
+      this.ctx.fill();
+    }
 
     this.ctx.drawImage(
       this.image,
