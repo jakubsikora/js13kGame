@@ -1,5 +1,4 @@
 import {
-  TILE_TYPE_PATH,
   PATH_LOCATION_STATUS_INVALID,
   PATH_LOCATION_STATUS_VALID,
   PATH_LOCATION_STATUS_BLOCKED,
@@ -7,10 +6,11 @@ import {
   PATH_LOCATION_STATUS_END } from './constants';
 
 export default class Path {
-  constructor(start, end, grid) {
+  constructor(start, end, grid, validType) {
     this.start = start;
     this.end = end;
     this.grid = JSON.parse(JSON.stringify(grid));
+    this.validType = validType;
   }
 
   findShortestPath() {
@@ -109,7 +109,7 @@ export default class Path {
 
       // location is not on the grid--return false
       return PATH_LOCATION_STATUS_INVALID;
-    } else if (grid[dft][dfl] !== TILE_TYPE_PATH) {
+    } else if (grid[dft][dfl] !== this.validType) {
       // location is either an obstacle or has been visited
       return PATH_LOCATION_STATUS_BLOCKED;
     } else if (dft === this.end[0] && dfl === this.end[1]) {

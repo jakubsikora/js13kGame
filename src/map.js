@@ -1,6 +1,5 @@
 import { TILE_HEIGHT, TILE_WIDTH } from './constants';
 import Tile from './tile';
-import Path from './path';
 import assets from './assets';
 import canvas from './canvas';
 
@@ -12,8 +11,8 @@ class Map {
     this.tileGraphics = [];
     this.assets = assets;
     this.grid = [];
-    this.rows = 20;
-    this.cols = 20;
+    this.rows = 35;
+    this.cols = 35;
 
     canvas.addEventListener('mousemove', e => {
       const coords = canvas.getBoundingClientRect();
@@ -76,19 +75,8 @@ class Map {
   generate() {
     for (let x = 0; x < this.rows; x++) {
       this.grid.push([]);
-
       for (let y = 0; y < this.cols; y++) {
-        const offset = 3;
-        if (x > offset
-            && x < this.rows - offset - 1
-            && x !== this.rows / 2
-            && y > offset
-            && y < this.cols - offset - 1
-            && y !== this.cols / 2) {
-          this.grid[x].push(0);
-        } else {
-          this.grid[x].push(1);
-        }
+        this.grid[x].push(1);
       }
     }
   }

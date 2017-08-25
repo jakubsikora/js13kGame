@@ -2,9 +2,12 @@ import raf from 'raf';
 import canvas from './canvas';
 import keys from './keys';
 import map from './map';
+import belt from './belt';
+import Luggage from './luggage';
 import assets from './assets';
 import Player from './player';
 import Path from './path';
+import { TILE_TYPE_PATH, PLAYER_MAP_OFFSET } from './constants';
 
 canvas.width = document.body.clientWidth;
 canvas.height = document.body.clientHeight;
@@ -19,16 +22,19 @@ class Game {
     this.map.load();
     this.loaded = this.assets.loaded;
 
-    const tile0 = this.map.tiles[0];
-    const tile1 = this.map.tiles[1];
-    const tile2 = this.map.tiles[2];
-    const p0 = new Player(tile0.centerX, tile0.centerY, this.map);
-    const p1 = new Player(tile1.centerX, tile1.centerY, this.map);
-    const p2 = new Player(tile2.centerX, tile2.centerY, this.map);
+    const playerTile = this.map.tiles[1012];
+    const p0 = new Player(playerTile.centerX, playerTile.centerY, this.map);
+
     this.players = [];
     this.players.push(p0);
-    this.players.push(p1);
-    this.players.push(p2);
+
+    const luggageTile = this.map.tiles[1006];
+    const luggageTile2 = this.map.tiles[500];
+
+    const l0 = new Luggage(luggageTile.centerX, luggageTile.centerY);
+    const l1 = new Luggage(luggageTile2.centerX, luggageTile2.centerY);
+    this.luggages = [l0, l1];
+    this.belt = belt;
 
     this.setEventHandlers();
   }
@@ -44,10 +50,46 @@ class Game {
     raf(gameLoop);
   }
 
+  checkCollisions() {
+    this.players.forEach(p => {
+      this.luggages.forEach(l => {
+        const rect1 = {
+          x: p.x - (PLAYER_MAP_OFFSET / 2),
+          y: p.y - (PLAYER_MAP_OFFSET / 2),
+          w: p.w + PLAYER_MAP_OFFSET,
+          h: p.h + PLAYER_MAP_OFFSET,
+        };
+
+        const rect2 = {
+          x: l.x,
+          y: l.y,
+          w: l.w,
+          h: l.h,
+        };
+
+        if (rect1.x < rect2.x + rect2.w &&
+          rect1.x + rect1.w > rect2.x &&
+          rect1.y < rect2.y + rect2.h &&
+          rect1.h + rect1.y > rect2.y) {
+            p.luggage = true;
+            l.collected = true;
+        }
+      });
+    });
+  }
+
   update() {
     this.players.forEach(player => {
       player.update();
     });
+
+    belt.update();
+
+    this.luggages.forEach(l => {
+      l.update();
+    });
+
+    this.checkCollisions();
   }
 
   render() {
@@ -58,6 +100,12 @@ class Game {
 
     this.players.forEach(player => {
       player.render();
+    });
+
+    belt.render();
+
+    this.luggages.forEach(l => {
+      l.render();
     });
   }
 
@@ -89,6 +137,7 @@ class Game {
                   [player.nextTile[0], player.nextTile[1]],
                   [tile.gridX, tile.gridY],
                   this.map.grid,
+                  TILE_TYPE_PATH,
                 );
 
                 player.tempPath = tempPath.findShortestPath();
@@ -97,6 +146,7 @@ class Game {
                   [player.playerTile.gridX, player.playerTile.gridY],
                   [tile.gridX, tile.gridY],
                   this.map.grid,
+                  TILE_TYPE_PATH,
                 );
 
                 player.path = path.findShortestPath();
@@ -109,38 +159,6 @@ class Game {
           });
         }
       });
-
-      // map.tiles.forEach(tile => {
-      //   tile.path = false;
-      // });
-
-      // map.tiles.forEach(tile => {
-      //   if (tile.isInside(x, y)) {
-          // if (this.path) {
-          //   this.changePath = true;
-
-          //   const tempPath = new Path(
-          //     [this.nextTile[0], this.nextTile[1]],
-          //     [tile.gridX, tile.gridY],
-          //     this.map.grid,
-          //   );
-
-          //   this.tempPath = tempPath.findShortestPath();
-          // } else {
-      //       const path = new Path(
-      //         [this.playerTile.gridX, this.playerTile.gridY],
-      //         [tile.gridX, tile.gridY],
-      //         this.map.grid,
-      //       );
-
-      //       this.path = path.findShortestPath();
-
-      //       if (this.path) {
-      //         this.updatePath = true;
-      //       }
-      //     }
-      //   }
-      // });
     });
 
     canvas.addEventListener('mousemove', e => {

@@ -1,11 +1,10 @@
 import assets from './assets';
 import canvas from './canvas';
-import keys from './keys';
 import map from './map';
-import Path from './path';
 
 import {
   A_CHARACTER,
+  PLAYER_MAP_OFFSET,
 } from './constants';
 
 const IMAGE_WIDTH = 50;
@@ -31,6 +30,8 @@ export default class Player {
     this.changePath = false;
     this.tempPath = null;
     this.selected = false;
+    this.collision = false;
+    this.luggage = false;
 
     this.directionMap = {
       S: {
@@ -240,8 +241,24 @@ export default class Player {
         0,
         2 * Math.PI,
       );
-      this.ctx.fillStyle = 'rgba(244, 67, 54, 0.7)';
+
+      if (this.luggage) {
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+      } else {
+        this.ctx.fillStyle = 'rgba(244, 67, 54, 0.7)';
+      }
+
       this.ctx.fill();
+    }
+
+    if (this.collision) {
+      this.ctx.fillStyle = 'rgba(233, 30, 99, 0.31)';
+      this.ctx.fillRect(
+        this.x - (PLAYER_MAP_OFFSET / 2),
+        this.y - (PLAYER_MAP_OFFSET / 2),
+        this.w + PLAYER_MAP_OFFSET,
+        this.h + PLAYER_MAP_OFFSET,
+      );
     }
 
     this.ctx.drawImage(

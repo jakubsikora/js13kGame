@@ -10,3 +10,6 @@ export const PATH_LOCATION_STATUS_END = 'End';
 // Assets
 export const A_FLOOR = 'Floor';
 export const A_CHARACTER = 'Character';
+
+// Luggage
+export const PLAYER_MAP_OFFSET = 20;
