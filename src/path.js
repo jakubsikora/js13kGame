@@ -109,7 +109,7 @@ export default class Path {
 
       // location is not on the grid--return false
       return PATH_LOCATION_STATUS_INVALID;
-    } else if (grid[dft][dfl] !== this.validType) {
+    } else if (this.validType.indexOf(grid[dft][dfl]) === -1) {
       // location is either an obstacle or has been visited
       return PATH_LOCATION_STATUS_BLOCKED;
     } else if (dft === this.end[0] && dfl === this.end[1]) {

@@ -1,4 +1,11 @@
-import { TILE_HEIGHT, TILE_WIDTH } from './constants';
+import {
+  TILE_HEIGHT,
+  TILE_WIDTH,
+  MAP_ROWS,
+  MAP_COLS,
+  TILE_TYPE_PATH,
+  A_BELT,
+} from './constants';
 import Tile from './tile';
 import assets from './assets';
 import canvas from './canvas';
@@ -11,8 +18,8 @@ class Map {
     this.tileGraphics = [];
     this.assets = assets;
     this.grid = [];
-    this.rows = 35;
-    this.cols = 35;
+    this.rows = MAP_ROWS;
+    this.cols = MAP_COLS;
 
     canvas.addEventListener('mousemove', e => {
       const coords = canvas.getBoundingClientRect();
@@ -30,8 +37,6 @@ class Map {
   }
 
   load() {
-    this.generate();
-
     const offsetX = (this.canvas.width / 2) - (TILE_WIDTH / 2);
     const offsetY = (this.canvas.height - (TILE_HEIGHT * this.rows)) / 2;
 
@@ -40,12 +45,12 @@ class Map {
       for (let j = 0; j < this.grid[i].length; j++) {
         const { x, y } = this.twoDToIso(i, j);
         const tileType = this.grid[i][j];
-
+        const asset = this.assets.getByType(tileType);
         const tile = new Tile(
           this.canvas,
-          (x * TILE_HEIGHT) + offsetX, // (this.cols / 2 * TILE_WIDTH) - TILE_WIDTH,
+          (x * TILE_HEIGHT) + offsetX,
           (y * TILE_HEIGHT) + offsetY,
-          this.assets.getByType(tileType),
+          asset,
           i,
           j,
         );
@@ -61,9 +66,14 @@ class Map {
     });
   }
 
-  getTile(x, y) {
+  getTileByCoords(x, y) {
     return this.tiles.filter(tile => tile.isInside(x, y))[0];
   }
+
+  getTile(x, y) {
+    return this.tiles.filter(t => (t.gridX === x && t.gridY === y))[0];
+  }
+
 
   twoDToIso(i, j) {
     return {
@@ -76,7 +86,7 @@ class Map {
     for (let x = 0; x < this.rows; x++) {
       this.grid.push([]);
       for (let y = 0; y < this.cols; y++) {
-        this.grid[x].push(1);
+        this.grid[x].push(TILE_TYPE_PATH);
       }
     }
   }

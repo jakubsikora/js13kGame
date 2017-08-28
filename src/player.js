@@ -11,7 +11,7 @@ const IMAGE_WIDTH = 50;
 const IMAGE_HEIGHT = 75;
 
 export default class Player {
-  constructor(x, y) {
+  constructor(x, y, luggageId) {
     this.ctx = canvas.getContext('2d');
     this.w = IMAGE_WIDTH / 4;
     this.h = IMAGE_HEIGHT / 4;
@@ -20,7 +20,7 @@ export default class Player {
     this.vel = 0;
     this.map = map;
     this.direction = 'N';
-    this.image = assets.getByName(A_CHARACTER);
+    this.image = assets.getByName(A_CHARACTER).img;
     this.frameIndex = 0;
     this.tickCount = 0;
     this.ticksPerFrame = 10;
@@ -32,6 +32,9 @@ export default class Player {
     this.selected = false;
     this.collision = false;
     this.luggage = false;
+
+    // TODO: multiple
+    this.luggageId = luggageId;
 
     this.directionMap = {
       S: {
@@ -60,10 +63,8 @@ export default class Player {
       },
     };
 
-    this.setEventHandlers();
-
     // TODO: fix this
-    this.currentTile = map.getTile(
+    this.currentTile = map.getTileByCoords(
       this.realPosition[0],
       this.realPosition[1],
     );
@@ -79,48 +80,8 @@ export default class Player {
     return [this.x + (this.w / 2), this.y + this.h];
   }
 
-  setEventHandlers() {
-    canvas.addEventListener('mousedown', e => {
-      // const coords = canvas.getBoundingClientRect();
-      // const x = e.clientX - coords.left;
-      // const y = e.clientY - coords.top;
-
-      // map.tiles.forEach(tile => {
-      //   tile.path = false;
-      // });
-
-      // map.tiles.forEach(tile => {
-      //   if (tile.isInside(x, y)) {
-      //     if (this.path) {
-      //       this.changePath = true;
-
-      //       const tempPath = new Path(
-      //         [this.nextTile[0], this.nextTile[1]],
-      //         [tile.gridX, tile.gridY],
-      //         this.map.grid,
-      //       );
-
-      //       this.tempPath = tempPath.findShortestPath();
-      //     } else {
-      //       const path = new Path(
-      //         [this.playerTile.gridX, this.playerTile.gridY],
-      //         [tile.gridX, tile.gridY],
-      //         this.map.grid,
-      //       );
-
-      //       this.path = path.findShortestPath();
-
-      //       if (this.path) {
-      //         this.updatePath = true;
-      //       }
-      //     }
-      //   }
-      // });
-    });
-  }
-
   get playerTile() {
-    return map.getTile(
+    return map.getTileByCoords(
       this.realPosition[0],
       this.realPosition[1],
     );
@@ -134,7 +95,7 @@ export default class Player {
   followPath() {
     if (!this.nextTile) return;
     const currentTile = map
-      .getTile(this.realPosition[0], this.realPosition[1]);
+      .getTileByCoords(this.realPosition[0], this.realPosition[1]);
 
     if (currentTile.gridX === this.nextTile[0]
         && currentTile.gridY === this.nextTile[1]
@@ -146,7 +107,7 @@ export default class Player {
         this.path = { ...this.tempPath };
         this.tempPath = null;
         this.changePath = false;
-        this.map.tiles.forEach(tile => tile.path = false);
+        this.map.tiles.forEach(tile => (tile.path = false));
       }
     } else {
       this.updatePath = false;
@@ -210,20 +171,20 @@ export default class Player {
       }
     }
 
-    if (this.path && this.path.directions) {
-      map.tiles.forEach(tile => {
-        this.path.grid.some(t => {
-          if (t[0] === tile.gridX && t[1] === tile.gridY) {
-            tile.path = true;
-            return true;
-          }
+    // if (this.path && this.path.directions) {
+    //   map.tiles.forEach(tile => {
+    //     this.path.grid.some(t => {
+    //       if (t[0] === tile.gridX && t[1] === tile.gridY) {
+    //         tile.path = true;
+    //         return true;
+    //       }
 
-          return false;
-        });
-      });
-    }
+    //       return false;
+    //     });
+    //   });
+    // }
 
-    this.currentTile = map.getTile(
+    this.currentTile = map.getTileByCoords(
       this.realPosition[0],
       this.realPosition[1],
     );
