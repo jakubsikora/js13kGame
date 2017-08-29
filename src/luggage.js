@@ -2,8 +2,8 @@ import canvas from './canvas';
 import map from './map';
 
 export default class Luggage {
-  constructor(id) {
-    this.id = id;
+  constructor() {
+    this.id = 1;
     this.ctx = canvas.getContext('2d');
     this.x = null;
     this.y = null;
@@ -23,10 +23,17 @@ export default class Luggage {
     this.loop = 2;
     this.reset = false;
     this.lost = false;
+
+    this.randomize();
   }
 
   get realPosition() {
     return [this.x - (this.w / 2), this.y - (this.h / 2)];
+  }
+
+  // TODO: randomize size/color etc.
+  randomize() {
+
   }
 
   followPath() {

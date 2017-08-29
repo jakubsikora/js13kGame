@@ -1,5 +1,6 @@
 import raf from 'raf';
 import canvas from './canvas';
+import config from './config';
 import keys from './keys';
 import map from './map';
 import Belt from './belt';
@@ -7,6 +8,8 @@ import Luggage from './luggage';
 import assets from './assets';
 import Player from './player';
 import Path from './path';
+import Flight from './flight';
+import level from './level';
 import {
   TILE_TYPE_PATH,
   PLAYER_MAP_OFFSET,
@@ -20,6 +23,13 @@ class Game {
     this.keys = keys;
     this.ctx = canvas.getContext('2d');
     this.assets = assets;
+    // TODO: move this
+    this.time = new Date();
+    this.time.setHours(9);
+    this.time.setMinutes(0);
+    this.time.setSeconds(0);
+    level.id = 0;
+    this.loadFlights();
 
     this.map = map;
     // Generate empty map
@@ -46,7 +56,7 @@ class Game {
     const spawnLuggages = (beltNumber) => {
       if (luggages[beltNumber]) {
         const id = luggages[beltNumber];
-        const l = new Luggage(id);
+        const l = new Luggage();
         this.belts[beltNumber].luggages.push(l);
         luggages[beltNumber]--;
       }
@@ -69,6 +79,15 @@ class Game {
     this.setEventHandlers();
   }
 
+  loadFlights() {
+    this.flights = config[level.id].flights.map(f => {
+      const flight = new Flight(f.code, f.origin, f.arrival);
+      flight.loadPassengers(f.passengers);
+
+      return flight;
+    });
+  }
+
   generateBelts() {
     const number = 2;
 
@@ -88,7 +107,14 @@ class Game {
   }
 
   start() {
+    let lastTime = (new Date()).getTime();
     const gameLoop = () => {
+      const currentTime = (new Date()).getTime();
+      if (currentTime - lastTime >= 1000) {
+        lastTime = currentTime;
+        this.time.setSeconds(this.time.getSeconds() + 1);
+      }
+
       this.update();
       this.render();
 
@@ -129,6 +155,21 @@ class Game {
     }
   }
 
+  checkTime(i) {
+    if (i < 10) i = `0${i}`;
+    return i;
+  }
+
+  getTime() {
+    const h = this.time.getHours();
+    let m = this.time.getMinutes();
+    let s = this.time.getSeconds();
+    m = this.checkTime(m);
+    s = this.checkTime(s);
+
+    return `${h}:${m}:${s}`;
+  }
+
   update() {
     this.players.forEach(player => {
       player.update();
@@ -154,6 +195,14 @@ class Game {
     this.belts.forEach(b => {
       b.render();
     });
+
+    // TODO: move to some timetable hud class
+    this.ctx.fillStyle = '#000';
+    this.ctx.fillRect(0, 0, canvas.width, 20);
+    this.ctx.font = '20px Helvetica';
+    this.ctx.fillStyle = '#dab821';
+    this.ctx.textBaseline = 'top';
+    this.ctx.fillText(`Time: ${this.getTime()}`, canvas.width - 130, 0);
   }
 
   setEventHandlers() {
@@ -214,7 +263,7 @@ class Game {
       const y1 = e.clientY - coords.top;
 
       const mouseTile = map.getTileByCoords(x1, y1);
-      console.log(mouseTile);
+
       let hovered = false;
 
       this.players.forEach(player => {

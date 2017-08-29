@@ -1,6 +1,9 @@
 import assets from './assets';
 import canvas from './canvas';
 import map from './map';
+import config from './config';
+import Luggage from './luggage';
+import level from './level';
 
 import {
   A_CHARACTER,
@@ -11,7 +14,7 @@ const IMAGE_WIDTH = 50;
 const IMAGE_HEIGHT = 75;
 
 export default class Player {
-  constructor(x, y, luggageId) {
+  constructor(x, y) {
     this.ctx = canvas.getContext('2d');
     this.w = IMAGE_WIDTH / 4;
     this.h = IMAGE_HEIGHT / 4;
@@ -31,10 +34,7 @@ export default class Player {
     this.tempPath = null;
     this.selected = false;
     this.collision = false;
-    this.luggage = false;
-
-    // TODO: multiple
-    this.luggageId = luggageId;
+    this.luggages = [];
 
     this.directionMap = {
       S: {
@@ -63,14 +63,6 @@ export default class Player {
       },
     };
 
-    // TODO: fix this
-    this.currentTile = map.getTileByCoords(
-      this.realPosition[0],
-      this.realPosition[1],
-    );
-    this.x = this.currentTile.centerX - (this.w / 2);
-    this.y = this.currentTile.centerY - this.h;
-
     this.nextTile = null;
     this.walking = false;
     this.updatePath = false;
@@ -85,6 +77,22 @@ export default class Player {
       this.realPosition[0],
       this.realPosition[1],
     );
+  }
+
+  landed() {
+    this.x = this.playerTile.centerX - (this.w / 2);
+    this.y = this.playerTile.centerY - this.h;
+  }
+
+  addLuggage() {
+    const min = config[level.id].luggage.min;
+    const max = config[level.id].luggage.max;
+
+    const luggagesNumber = Math.floor(Math.random() * max) + min;
+
+    for (let i = 0; i < luggagesNumber; i++) {
+      this.luggages.push(new Luggage());
+    }
   }
 
   insideTile(tile) {
