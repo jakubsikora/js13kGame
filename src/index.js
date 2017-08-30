@@ -9,6 +9,7 @@ import assets from './assets';
 import Player from './player';
 import Path from './path';
 import Flight from './flight';
+import Timetable from './timetable';
 import level from './level';
 import {
   TILE_TYPE_PATH,
@@ -29,7 +30,9 @@ class Game {
     this.time.setMinutes(0);
     this.time.setSeconds(0);
     level.id = 0;
+    this.flights = [];
     this.loadFlights();
+    this.timetable = new Timetable(this.flights);
 
     this.map = map;
     // Generate empty map
@@ -180,6 +183,8 @@ class Game {
     });
 
     this.checkCollisions();
+
+    this.timetable.update(this.getTime());
   }
 
   render() {
@@ -196,13 +201,7 @@ class Game {
       b.render();
     });
 
-    // TODO: move to some timetable hud class
-    this.ctx.fillStyle = '#000';
-    this.ctx.fillRect(0, 0, canvas.width, 20);
-    this.ctx.font = '20px Helvetica';
-    this.ctx.fillStyle = '#dab821';
-    this.ctx.textBaseline = 'top';
-    this.ctx.fillText(`Time: ${this.getTime()}`, canvas.width - 130, 0);
+    this.timetable.render();
   }
 
   setEventHandlers() {
