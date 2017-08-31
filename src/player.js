@@ -35,6 +35,7 @@ export default class Player {
     this.selected = false;
     this.collision = false;
     this.luggages = [];
+    this.ready = false;
 
     this.directionMap = {
       S: {
@@ -79,9 +80,10 @@ export default class Player {
     );
   }
 
-  landed() {
-    this.x = this.playerTile.centerX - (this.w / 2);
-    this.y = this.playerTile.centerY - this.h;
+  landed(x, y) {
+    this.x = x;
+    this.y = y;
+    this.ready = true;
   }
 
   addLuggage() {
@@ -123,6 +125,8 @@ export default class Player {
   }
 
   update() {
+    if (!this.ready) return;
+
     this.followPath();
 
     if (this.updatePath) {
@@ -179,19 +183,6 @@ export default class Player {
       }
     }
 
-    // if (this.path && this.path.directions) {
-    //   map.tiles.forEach(tile => {
-    //     this.path.grid.some(t => {
-    //       if (t[0] === tile.gridX && t[1] === tile.gridY) {
-    //         tile.path = true;
-    //         return true;
-    //       }
-
-    //       return false;
-    //     });
-    //   });
-    // }
-
     this.currentTile = map.getTileByCoords(
       this.realPosition[0],
       this.realPosition[1],
@@ -199,6 +190,8 @@ export default class Player {
   }
 
   render() {
+    if (!this.ready) return;
+
     this.directionCoords = this.directionMap[this.direction];
 
     if (this.selected) {

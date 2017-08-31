@@ -26,15 +26,15 @@ export default class Timetable {
     this.ctx.fillStyle = '#000';
     this.ctx.fillRect(this.x, this.y, this.w, rowHeight * rows.length);
 
-    // rows.forEach((r, index) => {
-    //   const textX = canvas.width - this.w;
-    //   const textY = index * rowHeight;
+    rows.forEach((r, index) => {
+      const textX = canvas.width - this.w;
+      const textY = index * rowHeight;
 
-    //   this.ctx.font = `${r.fontSize || 16}px Helvetica`;
-    //   this.ctx.fillStyle = '#dab821';
-    //   this.ctx.textBaseline = 'top';
-    //   this.ctx.fillText(r.text, textX, textY);
-    // });
+      this.ctx.font = `${r.fontSize || 16}px Helvetica`;
+      this.ctx.fillStyle = '#dab821';
+      this.ctx.textBaseline = 'top';
+      this.ctx.fillText(r.text, textX, textY);
+    });
 
     this.renderGrid();
   }

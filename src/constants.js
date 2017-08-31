@@ -1,6 +1,6 @@
 // Map
-export const MAP_ROWS = 26;
-export const MAP_COLS = 26;
+export const MAP_ROWS = 20;
+export const MAP_COLS = 20;
 
 // Tiles
 export const TILE_HEIGHT = 26;
@@ -30,3 +30,8 @@ export const PLAYER_MAP_OFFSET = 20;
 // Belt
 export const BELT_D = 1;
 export const BELT_L = 10;
+
+// Flight
+export const LANDED = 'LANDED';
+export const BAGS = 'BAGS IN LOBBY';
+export const COMPLETED = 'COMPLETED';

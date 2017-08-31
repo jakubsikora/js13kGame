@@ -47,36 +47,36 @@ class Game {
 
     this.loaded = this.assets.loaded;
 
-    const playerTile = this.map.tiles[500];
-    const p0 = new Player(
-      playerTile.centerX, playerTile.centerY, 1);
+    // const playerTile = this.map.tiles[500];
+    // const p0 = new Player(
+    //   playerTile.centerX, playerTile.centerY, 1);
 
     this.players = [];
-    this.players.push(p0);
+    // this.players.push(p0);
 
-    const luggages = [2, 5];
+    // const luggages = [2, 5];
 
-    const spawnLuggages = (beltNumber) => {
-      if (luggages[beltNumber]) {
-        const id = luggages[beltNumber];
-        const l = new Luggage();
-        this.belts[beltNumber].luggages.push(l);
-        luggages[beltNumber]--;
-      }
-    };
+    // const spawnLuggages = (beltNumber) => {
+    //   if (luggages[beltNumber]) {
+    //     const id = luggages[beltNumber];
+    //     const l = new Luggage();
+    //     this.belts[beltNumber].luggages.push(l);
+    //     luggages[beltNumber]--;
+    //   }
+    // };
 
-    function loop(beltNumber) {
-      if (luggages[beltNumber]) {
-        const rand = Math.round(Math.random() * 5000) + 500;
-        setTimeout(() => {
-          spawnLuggages(beltNumber);
-          loop(beltNumber);
-        }, rand);
-      }
-    }
+    // function loop(beltNumber) {
+    //   if (luggages[beltNumber]) {
+    //     const rand = Math.round(Math.random() * 5000) + 500;
+    //     setTimeout(() => {
+    //       spawnLuggages(beltNumber);
+    //       loop(beltNumber);
+    //     }, rand);
+    //   }
+    // }
 
-    loop(0);
-    loop(1);
+    // loop(0);
+    // loop(1);
 
 
     this.setEventHandlers();
@@ -115,7 +115,7 @@ class Game {
       const currentTime = (new Date()).getTime();
       if (currentTime - lastTime >= 1000) {
         lastTime = currentTime;
-        this.time.setSeconds(this.time.getSeconds() + 1);
+        this.time.setSeconds(this.time.getSeconds() + 60);
       }
 
       this.update();
@@ -185,6 +185,14 @@ class Game {
     this.checkCollisions();
 
     this.timetable.update(this.getTime());
+
+    this.checkFlights();
+  }
+
+  checkFlights() {
+    this.flights.forEach(f => {
+      f.hasLanded(this.getTime());
+    });
   }
 
   render() {

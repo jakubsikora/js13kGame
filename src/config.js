@@ -8,7 +8,7 @@ export default [{
   },
   flights: [{
     code: 'foo',
-    arrival: '09:30:00',
+    arrival: '09:10:00',
     origin: 'Warsaw',
     passengers: 4,
   }],
