@@ -9,7 +9,7 @@ import {
   TILE_TYPE_PATH } from './constants';
 
 export default class Belt {
-  constructor(start, end, pos) {
+  constructor(start, end, pos, number) {
     this.ctx = canvas.getContext('2d');
 
     this.start = start;
@@ -17,6 +17,8 @@ export default class Belt {
     this.pos = pos;
     this.path = null;
     this.luggages = [];
+    this.free = true;
+    this.number = number;
 
     this.generate();
   }

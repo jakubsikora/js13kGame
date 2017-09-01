@@ -4,7 +4,7 @@ import {
   MAP_ROWS,
   MAP_COLS,
   TILE_TYPE_PATH,
-  A_BELT,
+  TILE_TYPE_LOBBY,
 } from './constants';
 import Tile from './tile';
 import assets from './assets';
@@ -86,7 +86,11 @@ class Map {
     for (let x = 0; x < this.rows; x++) {
       this.grid.push([]);
       for (let y = 0; y < this.cols; y++) {
-        this.grid[x].push(TILE_TYPE_PATH);
+        if (x === this.cols - 1 || x === this.cols - 2) {
+          this.grid[x].push(TILE_TYPE_LOBBY);
+        } else {
+          this.grid[x].push(TILE_TYPE_PATH);
+        }
       }
     }
   }

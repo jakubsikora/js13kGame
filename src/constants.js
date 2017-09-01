@@ -9,6 +9,7 @@ export const TILE_TYPE_PATH = 1;
 export const TILE_TYPE_BELT = 2;
 export const TILE_TYPE_BELT_START = 3;
 export const TILE_TYPE_BELT_END = 4;
+export const TILE_TYPE_LOBBY = 5;
 
 // Paths
 export const PATH_LOCATION_STATUS_INVALID = 'Invalid';
@@ -23,6 +24,7 @@ export const A_CHARACTER = 'Character';
 export const A_BELT = 'Belt';
 export const A_BELT_START = 'Belt Start';
 export const A_BELT_END = 'Belt End';
+export const A_LOBBY = 'Lobby';
 
 // Luggage
 export const PLAYER_MAP_OFFSET = 20;
@@ -35,3 +37,6 @@ export const BELT_L = 10;
 export const LANDED = 'LANDED';
 export const BAGS = 'BAGS IN LOBBY';
 export const COMPLETED = 'COMPLETED';
+
+// Passnger
+export const SPAWN_DELAY = 5000;

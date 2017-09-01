@@ -13,6 +13,7 @@ import Timetable from './timetable';
 import level from './level';
 import {
   TILE_TYPE_PATH,
+  TILE_TYPE_LOBBY,
   PLAYER_MAP_OFFSET,
   MAP_ROWS } from './constants';
 
@@ -51,8 +52,7 @@ class Game {
     // const p0 = new Player(
     //   playerTile.centerX, playerTile.centerY, 1);
 
-    this.players = [];
-    // this.players.push(p0);
+    // this.passengers.push(p0);
 
     // const luggages = [2, 5];
 
@@ -105,6 +105,7 @@ class Game {
         end,
         start,
         pos,
+        i + 1,
       ));
     }
   }
@@ -128,8 +129,8 @@ class Game {
   }
 
   checkCollisions() {
-    if (this.players.length && this.belts[0].luggages.length) {
-      this.players.forEach(p => {
+    if (this.passengers.length && this.belts[0].luggages.length) {
+      this.passengers.forEach(p => {
         this.belts[0].luggages.forEach(l => {
           const rect1 = {
             x: p.x - (PLAYER_MAP_OFFSET / 2),
@@ -174,8 +175,8 @@ class Game {
   }
 
   update() {
-    this.players.forEach(player => {
-      player.update();
+    this.passengers.forEach(p => {
+      p.update();
     });
 
     this.belts.forEach(b => {
@@ -191,8 +192,32 @@ class Game {
 
   checkFlights() {
     this.flights.forEach(f => {
-      f.hasLanded(this.getTime());
+      if (f.hasLanded(this.getTime())) {
+        if (this.emptyBelts.length) {
+          f.belt = this.emptyBelts[0];
+          console.log(f);
+        } else {
+          // no free belts, need to wait
+          f.status = null;
+        }
+      }
     });
+  }
+
+  get passengers() {
+    const passengers = [];
+
+    this.flights.forEach(f => {
+      f.passengers.forEach(p => {
+        passengers.push(p);
+      });
+    });
+
+    return passengers;
+  }
+
+  get emptyBelts() {
+    return this.belts.filter(b => b.free);
   }
 
   render() {
@@ -201,8 +226,8 @@ class Game {
     this.ctx.fillRect(0, 0, canvas.width, canvas.height);
     this.map.render();
 
-    this.players.forEach(player => {
-      player.render();
+    this.passengers.forEach(p => {
+      p.render();
     });
 
     this.belts.forEach(b => {
@@ -220,13 +245,13 @@ class Game {
 
       map.tiles.forEach(tile => {
         if (tile.isInside(x, y)) {
-          this.players.forEach(player => {
+          this.passengers.forEach(player => {
             if (player.insideTile(tile)) {
               player.selected = !player.selected;
 
               // Deselect others
               if (player.selected) {
-                this.players.forEach(p => {
+                this.passengers.forEach(p => {
                   if (p !== player) p.selected = false;
                 });
               }
@@ -234,22 +259,24 @@ class Game {
 
             if (player.selected) {
               if (player.path) {
-                player.changePath = true;
+                if (player.nextTile) {
+                  player.changePath = true;
 
-                const tempPath = new Path(
-                  [player.nextTile[0], player.nextTile[1]],
-                  [tile.gridX, tile.gridY],
-                  this.map.grid,
-                  [TILE_TYPE_PATH],
-                );
+                  const tempPath = new Path(
+                    [player.nextTile[0], player.nextTile[1]],
+                    [tile.gridX, tile.gridY],
+                    this.map.grid,
+                    [TILE_TYPE_PATH, TILE_TYPE_LOBBY],
+                  );
 
-                player.tempPath = tempPath.findShortestPath();
+                  player.tempPath = tempPath.findShortestPath();
+                }
               } else {
                 const path = new Path(
                   [player.playerTile.gridX, player.playerTile.gridY],
                   [tile.gridX, tile.gridY],
                   this.map.grid,
-                  [TILE_TYPE_PATH],
+                  [TILE_TYPE_PATH, TILE_TYPE_LOBBY],
                 );
 
                 player.path = path.findShortestPath();
@@ -273,7 +300,7 @@ class Game {
 
       let hovered = false;
 
-      this.players.forEach(player => {
+      this.passengers.forEach(player => {
         if (mouseTile === player.playerTile) {
           hovered = true;
         }

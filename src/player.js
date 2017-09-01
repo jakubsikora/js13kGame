@@ -8,6 +8,7 @@ import level from './level';
 import {
   A_CHARACTER,
   PLAYER_MAP_OFFSET,
+  A_LOBBY,
 } from './constants';
 
 const IMAGE_WIDTH = 50;
@@ -80,9 +81,19 @@ export default class Player {
     );
   }
 
-  landed(x, y) {
-    this.x = x;
-    this.y = y;
+  spawn() {
+    // Find
+    const availableTiles = map.tiles.filter(t =>
+      t.asset.name === A_LOBBY && !t.playerOn);
+
+    const tile = availableTiles[
+      Math.floor(Math.random() * availableTiles.length)];
+    console.log(tile);
+
+    tile.playerOn = true;
+
+    this.x = tile.centerX - (this.w / 2);
+    this.y = tile.centerY - this.h;
     this.ready = true;
   }
 

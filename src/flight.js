@@ -1,5 +1,5 @@
 import Player from './player';
-import { LANDED, BAGS, COMPLETED } from './constants';
+import { LANDED, BAGS, COMPLETED, SPAWN_DELAY } from './constants';
 
 export default class Flight {
   constructor(code, origin, time) {
@@ -34,10 +34,14 @@ export default class Flight {
 
         // start spawning passengers after delay
         setTimeout(() => {
-          console.log('spawn', this.passengers);
-        }, 5000);
+          this.passengers.forEach(p => p.spawn());
+        }, SPAWN_DELAY);
+
+        return true;
       }
     }
+
+    return false;
   }
 
   compareTime(time1, time2) {
