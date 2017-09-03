@@ -4,11 +4,14 @@ import map from './map';
 import config from './config';
 import Luggage from './luggage';
 import level from './level';
+import Path from './path';
 
 import {
   A_CHARACTER,
   PLAYER_MAP_OFFSET,
   A_LOBBY,
+  TILE_TYPE_PATH,
+  TILE_TYPE_EXIT,
 } from './constants';
 
 const IMAGE_WIDTH = 50;
@@ -36,6 +39,7 @@ export default class Player {
     this.selected = false;
     this.collision = false;
     this.luggages = [];
+    this.goToExit = false;
     this.ready = false;
 
     this.directionMap = {
@@ -86,15 +90,21 @@ export default class Player {
     const availableTiles = map.tiles.filter(t =>
       t.asset.name === A_LOBBY && !t.playerOn);
 
-    const tile = availableTiles[
-      Math.floor(Math.random() * availableTiles.length)];
-    console.log(tile);
+    if (availableTiles.length) {
+      // start spawning passengers after delay
+      const tile = availableTiles[
+        Math.floor(Math.random() * availableTiles.length)];
 
-    tile.playerOn = true;
+      tile.playerOn = true;
 
-    this.x = tile.centerX - (this.w / 2);
-    this.y = tile.centerY - this.h;
-    this.ready = true;
+      this.x = tile.centerX - (this.w / 2);
+      this.y = tile.centerY - this.h;
+      this.ready = true;
+
+      return true;
+    }
+
+    return false;
   }
 
   addLuggage() {
@@ -132,6 +142,54 @@ export default class Player {
       }
     } else {
       this.updatePath = false;
+    }
+  }
+
+  get waitingLuggages() {
+    return this.luggages.filter(l => !l.collected);
+  }
+
+  checkCollisions() {
+    if (this.waitingLuggages.length) {
+      this.waitingLuggages.forEach(l => {
+        const rect1 = {
+          x: this.x - (PLAYER_MAP_OFFSET / 2),
+          y: this.y - (PLAYER_MAP_OFFSET / 2),
+          w: this.w + PLAYER_MAP_OFFSET,
+          h: this.h + PLAYER_MAP_OFFSET,
+        };
+
+        const rect2 = {
+          x: l.x,
+          y: l.y,
+          w: l.w,
+          h: l.h,
+        };
+
+        if (rect1.x < rect2.x + rect2.w &&
+          rect1.x + rect1.w > rect2.x &&
+          rect1.y < rect2.y + rect2.h &&
+          rect1.h + rect1.y > rect2.y) {
+          l.collected = true;
+        }
+      });
+    } else {
+      console.log('going to exit');
+      this.goToExit = true;
+
+      this.changePath = true;
+      this.selected = true;
+
+      // TODO: getting exit from map?
+      const tile = map.getTile(15, 0);
+      const tempPath = new Path(
+        [this.nextTile[0], this.nextTile[1]],
+        [tile.gridX, tile.gridY],
+        this.map.grid,
+        [TILE_TYPE_PATH, TILE_TYPE_EXIT],
+      );
+
+      this.tempPath = tempPath.findShortestPath();
     }
   }
 
@@ -198,6 +256,8 @@ export default class Player {
       this.realPosition[0],
       this.realPosition[1],
     );
+
+    if (this.luggages.length && !this.goToExit) this.checkCollisions();
   }
 
   render() {
@@ -215,23 +275,13 @@ export default class Player {
         2 * Math.PI,
       );
 
-      if (this.luggage) {
+      if (this.goToExit) {
         this.ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
       } else {
         this.ctx.fillStyle = 'rgba(244, 67, 54, 0.7)';
       }
 
       this.ctx.fill();
-    }
-
-    if (this.collision) {
-      this.ctx.fillStyle = 'rgba(233, 30, 99, 0.31)';
-      this.ctx.fillRect(
-        this.x - (PLAYER_MAP_OFFSET / 2),
-        this.y - (PLAYER_MAP_OFFSET / 2),
-        this.w + PLAYER_MAP_OFFSET,
-        this.h + PLAYER_MAP_OFFSET,
-      );
     }
 
     this.ctx.drawImage(

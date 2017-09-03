@@ -5,11 +5,13 @@ import {
   A_BELT_START,
   A_BELT_END,
   A_LOBBY,
+  A_EXIT,
   TILE_TYPE_PATH,
   TILE_TYPE_BELT,
   TILE_TYPE_BELT_START,
   TILE_TYPE_BELT_END,
   TILE_TYPE_LOBBY,
+  TILE_TYPE_EXIT,
 } from './constants';
 
 class Assets {
@@ -37,6 +39,10 @@ class Assets {
       name: A_LOBBY,
       bgColor: '#673ab7',
       type: TILE_TYPE_LOBBY,
+    }, {
+      name: A_EXIT,
+      bgColor: '#ff0000',
+      type: TILE_TYPE_EXIT,
     }];
 
     this.loadedItems = [];

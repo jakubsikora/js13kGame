@@ -7,9 +7,14 @@ export default [{
     max: 1,
   },
   flights: [{
-    code: 'foo',
+    code: 'foo1',
     arrival: '09:01:00',
     origin: 'Warsaw',
     passengers: 2,
+  }, {
+    code: 'foo2',
+    arrival: '09:02:00',
+    origin: 'Warsaw',
+    passengers: 1,
   }],
 }];

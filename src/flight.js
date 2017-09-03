@@ -1,5 +1,5 @@
 import Player from './player';
-import { LANDED, BAGS, COMPLETED, SPAWN_DELAY } from './constants';
+import { LANDED, BAGS, COMPLETED, SPAWN_DELAY_PASSENGERS, SPAWN_DELAY_BELT } from './constants';
 
 export default class Flight {
   constructor(code, origin, time) {
@@ -8,6 +8,7 @@ export default class Flight {
     this.status = null;
     this.time = time;
     this.passengers = [];
+    this.passengersLeft = false;
     this.belt = null;
   }
 
@@ -32,16 +33,22 @@ export default class Flight {
       if (flightTime.getTime() <= currentTime.getTime()) {
         this.status = LANDED;
 
-        // start spawning passengers after delay
-        setTimeout(() => {
-          this.passengers.forEach(p => p.spawn());
-        }, SPAWN_DELAY);
-
         return true;
       }
     }
 
     return false;
+  }
+
+  spawnPassengers() {
+    const passengersInside = this.passengers.filter(p => !p.ready);
+    console.log('passengersInside', passengersInside.length);
+
+    passengersInside.forEach(p => {
+      p.spawn();
+    });
+
+    if (!passengersInside.length) this.passengersLeft = true;
   }
 
   compareTime(time1, time2) {
@@ -57,5 +64,26 @@ export default class Flight {
     if (t1.getTime() > t2.getTime()) return 1;
     if (t1.getTime() < t2.getTime()) return -1;
     return 0;
+  }
+
+  get luggages() {
+    const luggages = [];
+
+    this.passengers.forEach(p => {
+      p.luggages.forEach(l => {
+        luggages.push(l);
+      });
+    });
+
+    return luggages;
+  }
+
+  assignBelt(belt) {
+    belt.free = false;
+    this.belt = belt;
+
+    console.log('adding luggages...', this.luggages);
+    this.belt.waitingLuggages = this.luggages;
+    this.belt.spawn();
   }
 }

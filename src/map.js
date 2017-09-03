@@ -5,6 +5,7 @@ import {
   MAP_COLS,
   TILE_TYPE_PATH,
   TILE_TYPE_LOBBY,
+  TILE_TYPE_EXIT,
 } from './constants';
 import Tile from './tile';
 import assets from './assets';
@@ -86,7 +87,9 @@ class Map {
     for (let x = 0; x < this.rows; x++) {
       this.grid.push([]);
       for (let y = 0; y < this.cols; y++) {
-        if (x === this.cols - 1 || x === this.cols - 2) {
+        if (y === 0 && x === 15) {
+          this.grid[x].push(TILE_TYPE_EXIT);
+        } else if (x === this.cols - 1 || x === this.cols - 2) {
           this.grid[x].push(TILE_TYPE_LOBBY);
         } else {
           this.grid[x].push(TILE_TYPE_PATH);

@@ -6,7 +6,8 @@ import {
   TILE_TYPE_BELT,
   TILE_TYPE_BELT_START,
   TILE_TYPE_BELT_END,
-  TILE_TYPE_PATH } from './constants';
+  TILE_TYPE_PATH,
+  SPAWN_DELAY_BELT } from './constants';
 
 export default class Belt {
   constructor(start, end, pos, number) {
@@ -17,6 +18,7 @@ export default class Belt {
     this.pos = pos;
     this.path = null;
     this.luggages = [];
+    this.waitingLuggages = [];
     this.free = true;
     this.number = number;
 
@@ -59,11 +61,23 @@ export default class Belt {
     this.path = path.findShortestPath();
   }
 
+  spawn() {
+    const luggage = this.waitingLuggages.shift();
+    const rand = Math.round(Math.random() * SPAWN_DELAY_BELT) + 1000;
+
+    setTimeout(() => {
+      this.luggages.push(luggage);
+
+      if (this.waitingLuggages.length) {
+        this.spawn();
+      }
+    }, rand);
+  }
+
   update() {
     if (this.luggages.length) {
       this.luggages.forEach(l => {
         if (!l.ready) {
-          // TODO: add timeout
           const currentTile = map
             .getTile(this.path.grid[0][0], this.path.grid[0][1]);
           l.x = currentTile.centerX;
@@ -78,6 +92,13 @@ export default class Belt {
         }
 
         if (l.ready) l.update();
+
+        if (l.lost) {
+          const index = this.luggages.indexOf(l);
+          if (index > -1) this.luggages.splice(index, 1);
+
+          if (!this.luggages.length) this.free = true;
+        }
       });
     }
   }

@@ -40,44 +40,12 @@ class Game {
     this.map.generate();
 
     // Generate belt
-    this.belts = [];
-    this.generateBelts();
+    this.belts = this.generateBelts();
 
     // Put all together
     this.map.load();
 
     this.loaded = this.assets.loaded;
-
-    // const playerTile = this.map.tiles[500];
-    // const p0 = new Player(
-    //   playerTile.centerX, playerTile.centerY, 1);
-
-    // this.passengers.push(p0);
-
-    // const luggages = [2, 5];
-
-    // const spawnLuggages = (beltNumber) => {
-    //   if (luggages[beltNumber]) {
-    //     const id = luggages[beltNumber];
-    //     const l = new Luggage();
-    //     this.belts[beltNumber].luggages.push(l);
-    //     luggages[beltNumber]--;
-    //   }
-    // };
-
-    // function loop(beltNumber) {
-    //   if (luggages[beltNumber]) {
-    //     const rand = Math.round(Math.random() * 5000) + 500;
-    //     setTimeout(() => {
-    //       spawnLuggages(beltNumber);
-    //       loop(beltNumber);
-    //     }, rand);
-    //   }
-    // }
-
-    // loop(0);
-    // loop(1);
-
 
     this.setEventHandlers();
   }
@@ -92,6 +60,7 @@ class Game {
   }
 
   generateBelts() {
+    const belts = [];
     const number = 2;
 
     for (let i = 0; i < number; i++) {
@@ -101,13 +70,15 @@ class Game {
       const end = [0, Math.floor(length / number * (i + 1)) - 1];
       const pos = Math.ceil(start[1] + (end[1] - start[1]) / 2);
 
-      this.belts.push(new Belt(
+      belts.push(new Belt(
         end,
         start,
         pos,
         i + 1,
       ));
     }
+
+    return belts;
   }
 
   start() {
@@ -126,37 +97,6 @@ class Game {
     };
 
     raf(gameLoop);
-  }
-
-  checkCollisions() {
-    if (this.passengers.length && this.belts[0].luggages.length) {
-      this.passengers.forEach(p => {
-        this.belts[0].luggages.forEach(l => {
-          const rect1 = {
-            x: p.x - (PLAYER_MAP_OFFSET / 2),
-            y: p.y - (PLAYER_MAP_OFFSET / 2),
-            w: p.w + PLAYER_MAP_OFFSET,
-            h: p.h + PLAYER_MAP_OFFSET,
-          };
-
-          const rect2 = {
-            x: l.x,
-            y: l.y,
-            w: l.w,
-            h: l.h,
-          };
-
-          if (rect1.x < rect2.x + rect2.w &&
-            rect1.x + rect1.w > rect2.x &&
-            rect1.y < rect2.y + rect2.h &&
-            rect1.h + rect1.y > rect2.y &&
-            l.id === p.luggageId) {
-              p.luggage = true;
-              l.collected = true;
-          }
-        });
-      });
-    }
   }
 
   checkTime(i) {
@@ -183,8 +123,6 @@ class Game {
       b.update();
     });
 
-    this.checkCollisions();
-
     this.timetable.update(this.getTime());
 
     this.checkFlights();
@@ -193,10 +131,12 @@ class Game {
   checkFlights() {
     this.flights.forEach(f => {
       if (f.hasLanded(this.getTime())) {
+        if (!f.passengersLeft) f.spawnPassengers();
+
         if (this.emptyBelts.length) {
-          f.belt = this.emptyBelts[0];
-          console.log(f);
+          f.assignBelt(this.emptyBelts[0]);
         } else {
+          console.log('no free belts, waiting...');
           // no free belts, need to wait
           f.status = null;
         }
@@ -257,7 +197,7 @@ class Game {
               }
             }
 
-            if (player.selected) {
+            if (player.selected && !player.goToExit) {
               if (player.path) {
                 if (player.nextTile) {
                   player.changePath = true;

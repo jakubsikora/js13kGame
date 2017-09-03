@@ -80,7 +80,7 @@ export default class Luggage {
   }
 
   update() {
-    if (this.collected) return;
+    if (this.collected || this.lost) return;
 
     if (this.ready) {
       this.followPath();
