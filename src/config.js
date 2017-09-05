@@ -1,6 +1,6 @@
 export default [{
   id: 1,
-  belts: 1,
+  belts: 2,
   airport: 'Wroclaw Airport',
   luggage: {
     min: 1,
@@ -17,4 +17,5 @@ export default [{
     origin: 'Warsaw',
     passengers: 1,
   }],
+  lost: 2,
 }];

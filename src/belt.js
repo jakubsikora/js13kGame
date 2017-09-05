@@ -93,7 +93,7 @@ export default class Belt {
 
         if (l.ready) l.update();
 
-        if (l.lost) {
+        if (l.lost || l.collected) {
           const index = this.luggages.indexOf(l);
           if (index > -1) this.luggages.splice(index, 1);
 

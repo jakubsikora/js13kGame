@@ -4,9 +4,7 @@ import config from './config';
 import keys from './keys';
 import map from './map';
 import Belt from './belt';
-import Luggage from './luggage';
 import assets from './assets';
-import Player from './player';
 import Path from './path';
 import Flight from './flight';
 import Timetable from './timetable';
@@ -14,11 +12,10 @@ import level from './level';
 import {
   TILE_TYPE_PATH,
   TILE_TYPE_LOBBY,
-  PLAYER_MAP_OFFSET,
   MAP_ROWS } from './constants';
 
-canvas.width = document.body.clientWidth;
-canvas.height = document.body.clientHeight;
+canvas.width = 800;
+canvas.height = 600;
 
 class Game {
   constructor() {
@@ -34,6 +31,7 @@ class Game {
     this.flights = [];
     this.loadFlights();
     this.timetable = new Timetable(this.flights);
+    this.lost = false;
 
     this.map = map;
     // Generate empty map
@@ -61,7 +59,7 @@ class Game {
 
   generateBelts() {
     const belts = [];
-    const number = 2;
+    const number = config[level.id].belts;
 
     for (let i = 0; i < number; i++) {
       const length = MAP_ROWS;
@@ -90,10 +88,15 @@ class Game {
         this.time.setSeconds(this.time.getSeconds() + 60);
       }
 
-      this.update();
-      this.render();
+      if (!this.lost) {
+        this.update();
+        this.render();
+        this.checkLost();
 
-      raf(gameLoop);
+        raf(gameLoop);
+      } else {
+        alert('you lost');
+      }
     };
 
     raf(gameLoop);
@@ -136,7 +139,7 @@ class Game {
         if (this.emptyBelts.length) {
           f.assignBelt(this.emptyBelts[0]);
         } else {
-          console.log('no free belts, waiting...');
+          console.log('no free belts');
           // no free belts, need to wait
           f.status = null;
         }
@@ -158,6 +161,20 @@ class Game {
 
   get emptyBelts() {
     return this.belts.filter(b => b.free);
+  }
+
+  checkLost() {
+    let lost = 0;
+
+    this.passengers.forEach(p => {
+      p.luggages.forEach(l => {
+        if (l.lost) lost++;
+      });
+    });
+
+    if (lost >= config[level.id].lost) {
+      this.lost = true;
+    }
   }
 
   render() {
