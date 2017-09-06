@@ -181,7 +181,7 @@ export default class Player {
       this.selected = true;
 
       // TODO: getting exit from map?
-      const tile = map.getTile(15, 0);
+      const tile = map.getTile(10, 0);
       const tempPath = new Path(
         [this.nextTile[0], this.nextTile[1]],
         [tile.gridX, tile.gridY],

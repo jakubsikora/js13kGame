@@ -17,5 +17,5 @@ export default [{
     origin: 'Warsaw',
     passengers: 1,
   }],
-  lost: 2,
+  lost: 20,
 }];

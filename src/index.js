@@ -7,15 +7,14 @@ import Belt from './belt';
 import assets from './assets';
 import Path from './path';
 import Flight from './flight';
-import Timetable from './timetable';
 import level from './level';
+import Hud from './hud';
 import {
   TILE_TYPE_PATH,
   TILE_TYPE_LOBBY,
-  MAP_ROWS } from './constants';
-
-canvas.width = 800;
-canvas.height = 600;
+  MAP_ROWS,
+  CANVAS_WIDTH,
+  CANVAS_HEIGHT } from './constants';
 
 class Game {
   constructor() {
@@ -30,7 +29,6 @@ class Game {
     level.id = 0;
     this.flights = [];
     this.loadFlights();
-    this.timetable = new Timetable(this.flights);
     this.lost = false;
 
     this.map = map;
@@ -44,6 +42,8 @@ class Game {
     this.map.load();
 
     this.loaded = this.assets.loaded;
+
+    this.hud = new Hud(this.flights);
 
     this.setEventHandlers();
   }
@@ -117,20 +117,6 @@ class Game {
     return `${h}:${m}:${s}`;
   }
 
-  update() {
-    this.passengers.forEach(p => {
-      p.update();
-    });
-
-    this.belts.forEach(b => {
-      b.update();
-    });
-
-    this.timetable.update(this.getTime());
-
-    this.checkFlights();
-  }
-
   checkFlights() {
     this.flights.forEach(f => {
       if (f.hasLanded(this.getTime())) {
@@ -177,9 +163,23 @@ class Game {
     }
   }
 
+  update() {
+    this.passengers.forEach(p => {
+      p.update();
+    });
+
+    this.belts.forEach(b => {
+      b.update();
+    });
+
+    this.checkFlights();
+
+    this.hud.update();
+  }
+
   render() {
     this.ctx.clearRect(0, 0, canvas.width, canvas.height);
-    this.ctx.fillStyle = '#120529';
+    this.ctx.fillStyle = '#000';
     this.ctx.fillRect(0, 0, canvas.width, canvas.height);
     this.map.render();
 
@@ -191,7 +191,7 @@ class Game {
       b.render();
     });
 
-    this.timetable.render();
+    this.hud.render();
   }
 
   setEventHandlers() {
@@ -199,6 +199,9 @@ class Game {
       const coords = canvas.getBoundingClientRect();
       const x = e.clientX - coords.left;
       const y = e.clientY - coords.top;
+
+      // const x = CANVAS_WIDTH * (e.pageX - coords.left) / coords.width;
+      // const y = CANVAS_HEIGHT * (e.pageY - coords.top) / coords.height;
 
       map.tiles.forEach(tile => {
         if (tile.isInside(x, y)) {
@@ -252,6 +255,10 @@ class Game {
       const coords = canvas.getBoundingClientRect();
       const x1 = e.clientX - coords.left;
       const y1 = e.clientY - coords.top;
+      console.log(x1, y1);
+
+      // const x1 = CANVAS_WIDTH * (e.pageX - coords.left) / coords.width;
+      // const y1 = CANVAS_HEIGHT * (e.pageY - coords.top) / coords.height;
 
       const mouseTile = map.getTileByCoords(x1, y1);
 

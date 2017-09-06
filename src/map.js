@@ -6,6 +6,8 @@ import {
   TILE_TYPE_PATH,
   TILE_TYPE_LOBBY,
   TILE_TYPE_EXIT,
+  CANVAS_WIDTH,
+  CANVAS_HEIGHT,
 } from './constants';
 import Tile from './tile';
 import assets from './assets';
@@ -26,6 +28,9 @@ class Map {
       const coords = canvas.getBoundingClientRect();
       const x = e.clientX - coords.left;
       const y = e.clientY - coords.top;
+
+      // const x = CANVAS_WIDTH * (e.pageX - coords.left) / coords.width;
+      // const y = CANVAS_HEIGHT * (e.pageY - coords.top) / coords.height;
 
       this.tiles.forEach(tile => {
         if (tile.isInside(x, y)) {
@@ -87,7 +92,7 @@ class Map {
     for (let x = 0; x < this.rows; x++) {
       this.grid.push([]);
       for (let y = 0; y < this.cols; y++) {
-        if (y === 0 && x === 15) {
+        if (y === 0 && x === 10) {
           this.grid[x].push(TILE_TYPE_EXIT);
         } else if (x === this.cols - 1 || x === this.cols - 2) {
           this.grid[x].push(TILE_TYPE_LOBBY);

@@ -1,6 +1,10 @@
+// Canvas
+export const CANVAS_HEIGHT = 600;
+export const CANVAS_WIDTH = 800;
+
 // Map
-export const MAP_ROWS = 20;
-export const MAP_COLS = 20;
+export const MAP_ROWS = 16;
+export const MAP_COLS = 16;
 
 // Tiles
 export const TILE_HEIGHT = 26;
@@ -43,3 +47,7 @@ export const COMPLETED = 'COMPLETED';
 
 // Passenger
 export const SPAWN_DELAY_PASSENGERS = 3000;
+
+// HUD
+export const HUD_TOP_HEIGHT = 20;
+export const HUD_BOTTOM_HEIGHT = 80;
