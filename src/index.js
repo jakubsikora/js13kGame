@@ -174,7 +174,7 @@ class Game {
 
     this.checkFlights();
 
-    this.hud.update();
+    this.hud.update(this.getTime());
   }
 
   render() {

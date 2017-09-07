@@ -9,10 +9,11 @@ export default class Hud {
   constructor(flights) {
     this.flights = flights;
     this.ctx = canvas.getContext('2d');
+    this.time = null;
   }
 
-  update() {
-
+  update(time) {
+    this.time = time;
   }
 
   render() {
@@ -25,7 +26,7 @@ export default class Hud {
     this.ctx.strokeRect(0, 0, canvas.width, HUD_TOP_HEIGHT);
 
     this.renderTime();
-    this.renderLostLuggage();
+    this.renderGeneralInfo();
   }
 
   renderBottom() {
@@ -41,24 +42,52 @@ export default class Hud {
 
   renderTime() {
     let x = 0;
-    const y = 0;
+    const y = 1;
 
     this.ctx.font = '16px Helvetica';
     this.ctx.fillStyle = '#dab821';
     this.ctx.textBaseline = 'top';
-    const text = this.ctx.measureText('09:00:00');
+    const text = this.ctx.measureText(this.time);
 
-    x = CANVAS_WIDTH - text.width;
+    x = CANVAS_WIDTH - text.width - 1;
 
-    this.ctx.fillText('09:00:00', x, y);
+    this.ctx.fillText(this.time, x, y);
   }
 
-  renderLostLuggage() {
+  renderGeneralInfo() {
+    let x = 1;
+    const y = 1;
 
+    this.ctx.font = '16px Helvetica';
+    this.ctx.fillStyle = '#dab821';
+    this.ctx.textBaseline = 'top';
+
+    const text1 = 'Flights landed: 0/3';
+    const text = this.ctx.measureText(text1);
+
+    // x = CANVAS_WIDTH - text.width - 1;
+    this.ctx.fillText(text1, x, y);
+
+    const text2 = 'Lost luggages: 0/3';
+    this.ctx.fillText(text2, text.width + 20, y);
   }
 
   renderFlightTable() {
+    // let x = 1;
+    // const y = 1;
 
+    // this.ctx.font = '16px Helvetica';
+    // this.ctx.fillStyle = '#dab821';
+    // this.ctx.textBaseline = 'top';
+
+    // const text1 = 'Timetable';
+    // const text = this.ctx.measureText(text1);
+
+    // // x = CANVAS_WIDTH - text.width - 1;
+    // this.ctx.fillText(text1, x, y);
+
+    // const text2 = 'Lost luggages: 0/3';
+    // this.ctx.fillText(text2, text.width + 20, y);
   }
 
   renderSelectedPassengerInfo() {

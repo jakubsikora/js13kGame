@@ -50,4 +50,4 @@ export const SPAWN_DELAY_PASSENGERS = 3000;
 
 // HUD
 export const HUD_TOP_HEIGHT = 20;
-export const HUD_BOTTOM_HEIGHT = 80;
+export const HUD_BOTTOM_HEIGHT = 50;
