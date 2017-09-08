@@ -13,7 +13,7 @@ export default [{
     passengers: 2,
   }, {
     code: 'foo2',
-    arrival: '09:02:00',
+    arrival: '09:10:00',
     origin: 'Warsaw',
     passengers: 1,
   }],

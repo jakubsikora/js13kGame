@@ -1,11 +1,11 @@
 import Player from './player';
-import { LANDED, BAGS, COMPLETED, SPAWN_DELAY_PASSENGERS, SPAWN_DELAY_BELT } from './constants';
+import { ONTIME, LANDED, BAGS, COMPLETED, SPAWN_DELAY_PASSENGERS, SPAWN_DELAY_BELT } from './constants';
 
 export default class Flight {
   constructor(code, origin, time) {
     this.code = code;
     this.origin = origin;
-    this.status = null;
+    this.status = ONTIME;
     this.time = time;
     this.passengers = [];
     this.passengersLeft = false;
@@ -21,7 +21,7 @@ export default class Flight {
   }
 
   hasLanded(time) {
-    if (!this.status) {
+    if (this.status === ONTIME) {
       const currentTime = new Date();
       let parts = time.split(':');
       currentTime.setHours(parts[0], parts[1], parts[2], 0);
@@ -85,5 +85,9 @@ export default class Flight {
     console.log('adding luggages...', this.luggages);
     this.belt.waitingLuggages = this.luggages;
     this.belt.spawn();
+
+    setTimeout(() => {
+      this.status = BAGS;
+    }, 2000);
   }
 }

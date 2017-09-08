@@ -255,7 +255,6 @@ class Game {
       const coords = canvas.getBoundingClientRect();
       const x1 = e.clientX - coords.left;
       const y1 = e.clientY - coords.top;
-      console.log(x1, y1);
 
       // const x1 = CANVAS_WIDTH * (e.pageX - coords.left) / coords.width;
       // const y1 = CANVAS_HEIGHT * (e.pageY - coords.top) / coords.height;

@@ -41,6 +41,7 @@ export const BELT_L = 10;
 export const SPAWN_DELAY_BELT = 5000;
 
 // Flight
+export const ONTIME = 'ON TIME';
 export const LANDED = 'LANDED';
 export const BAGS = 'BAGS IN LOBBY';
 export const COMPLETED = 'COMPLETED';
@@ -50,4 +51,5 @@ export const SPAWN_DELAY_PASSENGERS = 3000;
 
 // HUD
 export const HUD_TOP_HEIGHT = 20;
-export const HUD_BOTTOM_HEIGHT = 50;
+export const HUD_BOTTOM_HEIGHT = 20;
+export const TIMETABLE_ROW_HEIGHT = 18;
