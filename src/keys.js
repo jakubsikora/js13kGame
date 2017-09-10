@@ -8,15 +8,15 @@ class Keys {
   }
 
   keydownEventHandler(e) {
-    this.pressed[e.key] = true;
+    this.pressed[e.keyCode] = true;
   }
 
   keyupEventHandler(e) {
-    this.pressed[e.key] = false;
+    this.pressed[e.keyCode] = false;
   }
 
-  isPressed(key) {
-    return !!this.pressed[key];
+  isPressed(keyCode) {
+    return !!this.pressed[keyCode];
   }
 }
 

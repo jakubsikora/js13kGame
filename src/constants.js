@@ -15,6 +15,8 @@ export const TILE_TYPE_BELT_START = 3;
 export const TILE_TYPE_BELT_END = 4;
 export const TILE_TYPE_LOBBY = 5;
 export const TILE_TYPE_EXIT = 6;
+export const TILE_TYPE_WALL_N = 7;
+export const TILE_TYPE_WALL_E = 8;
 
 // Paths
 export const PATH_LOCATION_STATUS_INVALID = 'Invalid';
@@ -31,6 +33,8 @@ export const A_BELT_START = 'Belt Start';
 export const A_BELT_END = 'Belt End';
 export const A_LOBBY = 'Lobby';
 export const A_EXIT = 'Exit';
+export const A_WALL_N = 'WallN';
+export const A_WALL_E = 'WallE';
 
 // Luggage
 export const PLAYER_MAP_OFFSET = 20;
@@ -42,9 +46,11 @@ export const SPAWN_DELAY_BELT = 5000;
 
 // Flight
 export const ONTIME = 'ON TIME';
+export const WAITING = 'WAITING';
 export const LANDED = 'LANDED';
 export const BAGS = 'BAGS IN LOBBY';
 export const COMPLETED = 'COMPLETED';
+export const HIDE = 'HIDE';
 
 // Passenger
 export const SPAWN_DELAY_PASSENGERS = 3000;

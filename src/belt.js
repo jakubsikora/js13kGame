@@ -27,7 +27,7 @@ export default class Belt {
 
   generate() {
     map.grid.forEach((row, index) => {
-      if (index === 0) {
+      if (index === 1) {
         row.forEach((x, ridx) => {
           if (this.end[1] <= ridx && this.start[1] >= ridx) {
             map.grid[index][ridx] = TILE_TYPE_BELT;
@@ -36,15 +36,15 @@ export default class Belt {
       }
     });
 
-    for (let x = 0; x < BELT_L; x++) {
+    for (let x = 1; x < BELT_L; x++) {
       map.grid[x][this.pos] = TILE_TYPE_BELT;
     }
 
     map.grid[BELT_L - 1][this.pos - 1] = TILE_TYPE_BELT;
-    map.grid[0][this.pos - 1] = TILE_TYPE_PATH;
+    map.grid[1][this.pos - 1] = TILE_TYPE_PATH;
 
 
-    for (let x = 0; x < BELT_L; x++) {
+    for (let x = 1; x < BELT_L; x++) {
       map.grid[x][this.pos - 2] = TILE_TYPE_BELT;
     }
 

@@ -14,7 +14,9 @@ import {
   TILE_TYPE_LOBBY,
   MAP_ROWS,
   CANVAS_WIDTH,
-  CANVAS_HEIGHT } from './constants';
+  CANVAS_HEIGHT,
+  COMPLETED,
+  WAITING } from './constants';
 
 class Game {
   constructor() {
@@ -46,6 +48,22 @@ class Game {
     this.hud = new Hud(this.flights);
 
     this.setEventHandlers();
+
+    this.ready = false;
+    this.pause = false;
+    this.tutorial = [{
+      id: 0,
+      text: 'PRESS SPACE KEY TO START',
+    }, {
+      id: 1,
+      text: 'CLICK ON THE PASSENGER',
+    }, {
+      id: 2,
+      text: 'CLICK CLOSE TO THE CONVEYOR BELT TO COLLECT THE LUGGAGE',
+    }, {
+      id: 3,
+      text: 'WHEN ALL THE LUGGAGE IS COLLECTED THE PASSENGER WILL LEAVE THE TERMINAL',
+    }];
   }
 
   loadFlights() {
@@ -88,6 +106,11 @@ class Game {
         this.time.setSeconds(this.time.getSeconds() + 60);
       }
 
+      if (this.tutorial) {
+        this.update();
+        this.render();
+      }
+
       if (!this.lost) {
         this.update();
         this.render();
@@ -125,11 +148,12 @@ class Game {
         if (this.emptyBelts.length) {
           f.assignBelt(this.emptyBelts[0]);
         } else {
-          console.log('no free belts');
           // no free belts, need to wait
-          f.status = null;
+          f.status = WAITING;
         }
       }
+
+      if (f.status !== COMPLETED) f.isCompleted();
     });
   }
 
@@ -158,7 +182,7 @@ class Game {
       });
     });
 
-    if (lost >= config[level.id].lost) {
+    if (lost >= config[level.id].lost && config[level.id].lost > 0) {
       this.lost = true;
     }
   }
@@ -175,10 +199,76 @@ class Game {
     this.checkFlights();
 
     this.hud.update(this.getTime());
+
+    if (!this.ready && keys.isPressed(32)) {
+      this.tutorial.shift();
+      this.ready = true;
+    }
+
+    if (this.tutorial[0].id > 1) {
+      this.updateTutorial();
+    }
+  }
+
+  updateTutorial() {
+    if (this.tutorial.length) {
+      if (this.tutorial[0].id < 2) {
+        this.tutorial.shift();
+      }
+
+      if (this.tutorial[0].id === 2) {
+        this.flights[0].passengers[0].luggages.some(l => {
+          if (l.collected) {
+            this.tutorial.shift();
+            return true;
+          }
+        });
+      }
+    }
+  }
+
+  renderIntro() {
+    this.ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+    this.ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    this.ctx.font = '74px Impact';
+    this.ctx.fillStyle = '#dab821';
+    this.ctx.strokeStyle = '#000';
+    this.ctx.textBaseline = 'top';
+
+    const text = 'LOST LUGGAGE';
+    const x = (canvas.width / 2) - (this.ctx.measureText(text).width / 2);
+    const y = 50;
+
+    this.ctx.shadowColor = 'black';
+    this.ctx.shadowOffsetX = 3;
+    this.ctx.shadowOffsetY = 3;
+    this.ctx.shadowBlur = 7;
+    this.ctx.fillText(text, x, y);
+    this.ctx.strokeText(text, x, y);
+
+    this.ctx.shadowColor = 'transparent';
+  }
+
+  renderTutorial() {
+    if (!this.tutorial.length) return;
+
+    const text = this.tutorial[0].text;
+
+    this.ctx.font = '20px Impact';
+    this.ctx.fillStyle = '#dab821';
+    this.ctx.strokeStyle = '#000';
+    this.ctx.textBaseline = 'top';
+    const x = (canvas.width / 2) - (this.ctx.measureText(text).width / 2);
+    const y = canvas.height - 70;
+
+    this.ctx.fillText(text, x, y);
+    this.ctx.strokeText(text, x, y);
   }
 
   render() {
     this.ctx.clearRect(0, 0, canvas.width, canvas.height);
+
     this.ctx.fillStyle = '#000';
     this.ctx.fillRect(0, 0, canvas.width, canvas.height);
     this.map.render();
@@ -191,11 +281,19 @@ class Game {
       b.render();
     });
 
-    this.hud.render();
+    if (this.ready) this.hud.render();
+
+    if (!this.ready) {
+      this.renderIntro();
+    }
+
+    this.renderTutorial();
   }
 
   setEventHandlers() {
     canvas.addEventListener('mousedown', e => {
+      if (!this.ready) return;
+
       const coords = canvas.getBoundingClientRect();
       const x = e.clientX - coords.left;
       const y = e.clientY - coords.top;
@@ -208,6 +306,8 @@ class Game {
           this.passengers.forEach(player => {
             if (player.insideTile(tile)) {
               player.selected = !player.selected;
+
+              if (this.tutorial[0].id === 1) this.updateTutorial();
 
               // Deselect others
               if (player.selected) {
@@ -252,6 +352,8 @@ class Game {
     });
 
     canvas.addEventListener('mousemove', e => {
+      if (!this.ready) return;
+
       const coords = canvas.getBoundingClientRect();
       const x1 = e.clientX - coords.left;
       const y1 = e.clientY - coords.top;

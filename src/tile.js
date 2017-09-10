@@ -40,15 +40,19 @@ export default class Tile {
         this.x,
         this.y,
       );
+    } else {
+      if (this.asset.render) {
+        this.asset.render(this.x, this.y, TILE_WIDTH, TILE_HEIGHT, this.ctx);
+      } else {
+        this.renderRaw();
+        this.ctx.fillStyle = this.asset.bgColor;
+        this.ctx.fill();
+      }
 
       if (this.hovered) {
         this.ctx.strokeStyle = '#FF0000';
         this.ctx.stroke();
       }
-    } else {
-      this.renderRaw();
-      this.ctx.fillStyle = this.asset.bgColor;
-      this.ctx.fill();
     }
 
     if (this.path) {

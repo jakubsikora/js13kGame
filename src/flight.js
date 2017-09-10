@@ -1,5 +1,5 @@
 import Player from './player';
-import { ONTIME, LANDED, BAGS, COMPLETED, SPAWN_DELAY_PASSENGERS, SPAWN_DELAY_BELT } from './constants';
+import { ONTIME, LANDED, BAGS, COMPLETED, WAITING, HIDE, SPAWN_DELAY_PASSENGERS, SPAWN_DELAY_BELT } from './constants';
 
 export default class Flight {
   constructor(code, origin, time) {
@@ -10,6 +10,7 @@ export default class Flight {
     this.passengers = [];
     this.passengersLeft = false;
     this.belt = null;
+    this.landed = false;
   }
 
   loadPassengers(paxNumber) {
@@ -21,7 +22,8 @@ export default class Flight {
   }
 
   hasLanded(time) {
-    if (this.status === ONTIME) {
+    if (this.status === ONTIME
+        || this.status === WAITING) {
       const currentTime = new Date();
       let parts = time.split(':');
       currentTime.setHours(parts[0], parts[1], parts[2], 0);
@@ -31,7 +33,8 @@ export default class Flight {
       flightTime.setHours(parts[0], parts[1], parts[2], 0);
 
       if (flightTime.getTime() <= currentTime.getTime()) {
-        this.status = LANDED;
+        if (this.status !== WAITING) this.status = LANDED;
+        this.landed = true;
 
         return true;
       }
@@ -40,9 +43,23 @@ export default class Flight {
     return false;
   }
 
+  isCompleted() {
+    let completed = true;
+
+    this.passengers.forEach(p => {
+      p.luggages.forEach(l => {
+        if (!l.lost && !l.collected) completed = false;
+      });
+    });
+
+    if (completed) {
+      this.status = COMPLETED;
+      this.belt = null;
+    }
+  }
+
   spawnPassengers() {
     const passengersInside = this.passengers.filter(p => !p.ready);
-    console.log('passengersInside', passengersInside.length);
 
     passengersInside.forEach(p => {
       p.spawn();
@@ -82,7 +99,6 @@ export default class Flight {
     belt.free = false;
     this.belt = belt;
 
-    console.log('adding luggages...', this.luggages);
     this.belt.waitingLuggages = this.luggages;
     this.belt.spawn();
 

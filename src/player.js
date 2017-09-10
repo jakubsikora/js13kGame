@@ -119,6 +119,8 @@ export default class Player {
   }
 
   insideTile(tile) {
+    if (!this.playerTile || !tile) return false;
+
     return (tile.gridX === this.playerTile.gridX
       && tile.gridY === this.playerTile.gridY);
   }

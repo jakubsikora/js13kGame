@@ -6,6 +6,8 @@ import {
   TILE_TYPE_PATH,
   TILE_TYPE_LOBBY,
   TILE_TYPE_EXIT,
+  TILE_TYPE_WALL_N,
+  TILE_TYPE_WALL_E,
   CANVAS_WIDTH,
   CANVAS_HEIGHT,
 } from './constants';
@@ -94,6 +96,10 @@ class Map {
       for (let y = 0; y < this.cols; y++) {
         if (y === 0 && x === 10) {
           this.grid[x].push(TILE_TYPE_EXIT);
+        } else if (y === 0) {
+          this.grid[x].push(TILE_TYPE_WALL_N);
+        } else if (x === 0) {
+          this.grid[x].push(TILE_TYPE_WALL_E);
         } else if (x === this.cols - 1 || x === this.cols - 2) {
           this.grid[x].push(TILE_TYPE_LOBBY);
         } else {

@@ -1,5 +1,7 @@
 import canvas from './canvas';
 import map from './map';
+import config from './config';
+import level from './level';
 
 export default class Luggage {
   constructor() {
@@ -19,10 +21,12 @@ export default class Luggage {
     this.nextTile = null;
     this.updatePath = false;
     this.moving = false;
-    this.speed = 1;
-    this.loop = 2;
+    this.speed = 0.5;
+    this.loop = config[level.id].loop;
+
     this.reset = false;
     this.lost = false;
+    this.color = '#ffffff';
 
     this.randomize();
   }
@@ -38,9 +42,10 @@ export default class Luggage {
 
   followPath() {
     if (!this.nextTile) {
-      if (this.loop > 0 && this.reset) {
+      if ((this.loop > 0 && this.reset)) {
         // TODO: timeout or fake return
-        this.loop--;
+        if (level.id !== 0) this.loop--;
+
         this.path = {
           directions: [...this.newPath.directions],
           grid: [...this.newPath.grid],
@@ -134,7 +139,11 @@ export default class Luggage {
   render() {
     if (this.collected || this.lost) return;
 
-    this.ctx.fillStyle = '#000';
-    this.ctx.fillRect(this.realPosition[0], this.realPosition[1], this.w, this.h);
+    this.ctx.fillStyle = this.color;
+    this.ctx.fillRect(
+      this.realPosition[0] - 5,
+      this.realPosition[1] - 10,
+      this.w,
+      this.h);
   }
 }
