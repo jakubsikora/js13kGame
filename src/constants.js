@@ -17,6 +17,7 @@ export const TILE_TYPE_LOBBY = 5;
 export const TILE_TYPE_EXIT = 6;
 export const TILE_TYPE_WALL_N = 7;
 export const TILE_TYPE_WALL_E = 8;
+export const TILE_TYPE_BELT_NUMBER = 9;
 
 // Paths
 export const PATH_LOCATION_STATUS_INVALID = 'Invalid';
@@ -29,12 +30,14 @@ export const PATH_LOCATION_STATUS_END = 'End';
 export const A_FLOOR = 'Floor';
 export const A_CHARACTER = 'Character';
 export const A_BELT = 'Belt';
+export const A_BELT_NUMBER = 'Belt Number';
 export const A_BELT_START = 'Belt Start';
 export const A_BELT_END = 'Belt End';
 export const A_LOBBY = 'Lobby';
 export const A_EXIT = 'Exit';
 export const A_WALL_N = 'WallN';
 export const A_WALL_E = 'WallE';
+export const TILES_WALK = [A_FLOOR, A_LOBBY];
 
 // Luggage
 export const PLAYER_MAP_OFFSET = 20;

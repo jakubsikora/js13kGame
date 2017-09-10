@@ -6,6 +6,7 @@ import {
   TILE_TYPE_BELT,
   TILE_TYPE_BELT_START,
   TILE_TYPE_BELT_END,
+  TILE_TYPE_BELT_NUMBER,
   TILE_TYPE_PATH,
   SPAWN_DELAY_BELT } from './constants';
 
@@ -41,6 +42,7 @@ export default class Belt {
     }
 
     map.grid[BELT_L - 1][this.pos - 1] = TILE_TYPE_BELT;
+    map.grid[BELT_L - 2][this.pos - 1] = TILE_TYPE_BELT_NUMBER;
     map.grid[1][this.pos - 1] = TILE_TYPE_PATH;
 
 

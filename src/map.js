@@ -10,6 +10,7 @@ import {
   TILE_TYPE_WALL_E,
   CANVAS_WIDTH,
   CANVAS_HEIGHT,
+  TILES_WALK,
 } from './constants';
 import Tile from './tile';
 import assets from './assets';
@@ -35,7 +36,7 @@ class Map {
       // const y = CANVAS_HEIGHT * (e.pageY - coords.top) / coords.height;
 
       this.tiles.forEach(tile => {
-        if (tile.isInside(x, y)) {
+        if (tile.isInside(x, y) && TILES_WALK.indexOf(tile.asset.name) > -1) {
           tile.hovered = true;
         } else {
           tile.hovered = false;
