@@ -53,16 +53,30 @@ class Game {
     this.pause = false;
     this.tutorial = [{
       id: 0,
-      text: 'PRESS SPACE KEY TO START',
+      text: ['PRESS SPACE KEY TO START'],
     }, {
       id: 1,
-      text: 'CLICK ON THE PASSENGER',
+      text: [
+        'Tutorial 1/3',
+        'Click on the passenger',
+      ],
     }, {
       id: 2,
-      text: 'CLICK CLOSE TO THE CONVEYOR BELT TO COLLECT THE LUGGAGE',
+      text: [
+        'Tutorial 2/3',
+        'Passenger info will show its luggage.',
+        'Click close to the belt to collect it.',
+        'On the top bar you can see luggage loop limit.',
+        'Luggage will be lost if you won\'t make it.',
+        '(not during tutorial)',
+      ],
     }, {
       id: 3,
-      text: 'WHEN ALL THE LUGGAGE IS COLLECTED THE PASSENGER WILL LEAVE THE TERMINAL',
+      text: [
+        'Tutorial 3/3',
+        'When all luggages are collected, ',
+        'the passenger will leave the terminal.',
+      ],
     }];
   }
 
@@ -255,15 +269,31 @@ class Game {
 
     const text = this.tutorial[0].text;
 
-    this.ctx.font = '20px Impact';
-    this.ctx.fillStyle = '#dab821';
-    this.ctx.strokeStyle = '#000';
-    this.ctx.textBaseline = 'top';
-    const x = (canvas.width / 2) - (this.ctx.measureText(text).width / 2);
-    const y = canvas.height - 70;
+    if (this.tutorial[0].id !== 0) {
+      this.ctx.fillStyle = '#000';
+      this.ctx.strokeStyle = '#fff';
+      this.ctx.fillRect((canvas.width / 2) - 200, 50, 400, text.length * 21);
+      this.ctx.strokeRect((canvas.width / 2) - 200, 50, 400, text.length * 21);
+    }
 
-    this.ctx.fillText(text, x, y);
-    this.ctx.strokeText(text, x, y);
+    let x;
+    let y;
+    text.forEach((t, index) => {
+      this.ctx.font = '18px Impact';
+      this.ctx.fillStyle = '#dab821';
+      this.ctx.strokeStyle = '#000';
+      this.ctx.textBaseline = 'top';
+      x = (canvas.width / 2) - (this.ctx.measureText(t).width / 2);
+
+      y = canvas.height - 100;
+
+      if (this.tutorial[0].id !== 0) y = 50 + (index * 20);
+
+      this.ctx.fillStyle = '#dab821';
+      this.ctx.strokeStyle = '#000';
+      this.ctx.fillText(t, x + 5, y + 3);
+      this.ctx.strokeText(t, x + 5, y + 3);
+    });
   }
 
   render() {

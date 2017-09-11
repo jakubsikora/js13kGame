@@ -146,6 +146,12 @@ export default class Hud {
 
     this.ctx.fillStyle = '#dab821';
     this.ctx.fillText(waitingPassengersText, x, y);
+
+    const luggageLoopText = `Luggage loop: ${config[level.id].loop}`;
+    x += this.ctx.measureText(waitingPassengersText).width + offset;
+
+    this.ctx.fillStyle = '#dab821';
+    this.ctx.fillText(luggageLoopText, x, y);
   }
 
   renderFlightTable() {

@@ -22,6 +22,8 @@ import {
 
 class Assets {
   constructor() {
+    const that = this;
+
     this.items = [{
       name: A_FLOOR,
       // src: require('./assets/floor.png'),
@@ -46,6 +48,9 @@ class Assets {
     }, {
       name: A_CHARACTER,
       src: require('./assets/character.png'),
+    }, {
+      name: 'Exit1',
+      src: require('./assets/exit.png'),
     }, {
       name: A_BELT,
       bgColor: '#607d8b',
@@ -357,6 +362,14 @@ class Assets {
         ctx.strokeStyle = '#000';
         ctx.stroke();
         ctx.fill();
+
+        const asset = that.getByName('Exit1');
+
+        ctx.drawImage(
+          asset.img,
+          x1,
+          cy1 - 80,
+        );
       },
     }, {
       name: A_WALL_N,

@@ -4,8 +4,8 @@ export default [{
   loop: 2,
   airport: 'Wroclaw Airport',
   luggage: {
-    min: 3,
-    max: 3,
+    min: 1,
+    max: 1,
   },
   flights: [{
     arrival: '09:00:00',
