@@ -23,34 +23,12 @@ class Game {
     this.keys = keys;
     this.ctx = canvas.getContext('2d');
     this.assets = assets;
-    // TODO: move this
-    this.time = new Date();
-    this.time.setHours(9);
-    this.time.setMinutes(0);
-    this.time.setSeconds(0);
-    level.id = 0;
-    this.flights = [];
-    this.loadFlights();
-    this.lost = false;
-
-    this.map = map;
-    // Generate empty map
-    this.map.generate();
-
-    // Generate belt
-    this.belts = this.generateBelts();
-
-    // Put all together
-    this.map.load();
-
     this.loaded = this.assets.loaded;
-
-    this.hud = new Hud(this.flights);
 
     this.setEventHandlers();
 
-    this.ready = false;
-    this.pause = false;
+    this.loadLevel();
+
     this.tutorial = [{
       id: 0,
       text: ['PRESS SPACE KEY TO START'],
@@ -78,6 +56,30 @@ class Game {
         'the passenger will leave the terminal.',
       ],
     }];
+  }
+
+  loadLevel() {
+    this.time = new Date();
+    this.time.setHours(9);
+    this.time.setMinutes(0);
+    this.time.setSeconds(0);
+    this.flights = [];
+    this.loadFlights();
+    this.lost = false;
+
+    this.map = map;
+    // Generate empty map
+    this.map.generate();
+
+    // Generate belt
+    this.belts = this.generateBelts();
+
+    // Put all together
+    this.map.load();
+
+    this.hud = new Hud(this.flights);
+
+    this.ready = false;
   }
 
   loadFlights() {
@@ -120,19 +122,25 @@ class Game {
         this.time.setSeconds(this.time.getSeconds() + 60);
       }
 
-      if (this.tutorial) {
-        this.update();
-        this.render();
-      }
+      this.checkWin();
 
-      if (!this.lost) {
-        this.update();
-        this.render();
-        this.checkLost();
-
-        raf(gameLoop);
+      if (this.win) {
+        this.nextLevel();
       } else {
-        alert('you lost');
+        if (this.tutorial) {
+          this.update();
+          this.render();
+        }
+
+        if (!this.lost) {
+          this.update();
+          this.render();
+          this.checkLost();
+
+          raf(gameLoop);
+        } else {
+          alert('you lost');
+        }
       }
     };
 
@@ -198,6 +206,26 @@ class Game {
 
     if (lost >= config[level.id].lost && config[level.id].lost > 0) {
       this.lost = true;
+    }
+  }
+
+  checkWin() {
+    const completed = this.flights.filter(f => f.status !== COMPLETED);
+
+    if (completed.length) {
+      this.win = false;
+    } else {
+      this.win = true;
+    }
+  }
+
+  nextLevel() {
+    const nextLevel = level.id + 1;
+
+    if (config[nextLevel]) {
+      console.log(config[nextLevel]);
+    } else {
+      console.log('no more levels');
     }
   }
 
