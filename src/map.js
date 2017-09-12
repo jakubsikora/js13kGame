@@ -46,6 +46,7 @@ class Map {
   }
 
   load() {
+    this.tiles = [];
     const offsetX = (this.canvas.width / 2) - (TILE_WIDTH / 2);
     const offsetY = (this.canvas.height - (TILE_HEIGHT * this.rows)) / 2;
 
@@ -92,6 +93,8 @@ class Map {
   }
 
   generate() {
+    this.grid = [];
+
     for (let x = 0; x < this.rows; x++) {
       this.grid.push([]);
       for (let y = 0; y < this.cols; y++) {

@@ -24,7 +24,7 @@ export default class Player {
     this.h = IMAGE_HEIGHT / 4;
     this.x = x;
     this.y = y;
-    this.vel = 0;
+    this.speed = 1;
     this.map = map;
     this.direction = 'N';
     this.image = assets.getByName(A_CHARACTER).img;
@@ -40,6 +40,7 @@ export default class Player {
     this.collision = false;
     this.luggages = [];
     this.goToExit = false;
+    this.left = false;
     this.ready = false;
 
     this.directionMap = {
@@ -211,6 +212,10 @@ export default class Player {
       if (!direction) {
         this.walking = false;
         this.updatePath = false;
+        if (this.goToExit) {
+          this.left = true;
+          this.ready = false;
+        }
       } else {
         this.walking = true;
         this.direction = direction;
@@ -220,23 +225,23 @@ export default class Player {
 
     if (this.walking) {
       if (this.direction === 'S') {
-        this.x += 1;
-        this.y += 0.5;
+        this.x += 1 * this.speed;
+        this.y += 0.5 * this.speed;
       }
 
       if (this.direction === 'N') {
-        this.x -= 1;
-        this.y -= 0.5;
+        this.x -= 1 * this.speed;
+        this.y -= 0.5 * this.speed;
       }
 
       if (this.direction === 'E') {
-        this.x -= 1;
-        this.y += 0.5;
+        this.x -= 1 * this.speed;
+        this.y += 0.5 * this.speed;
       }
 
       if (this.direction === 'W') {
-        this.x += 1;
-        this.y -= 0.5;
+        this.x += 1 * this.speed;
+        this.y -= 0.5 * this.speed;
       }
     }
 

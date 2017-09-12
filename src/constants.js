@@ -37,6 +37,7 @@ export const A_LOBBY = 'Lobby';
 export const A_EXIT = 'Exit';
 export const A_WALL_N = 'WallN';
 export const A_WALL_E = 'WallE';
+export const A_LUGGAGE = 'Luggage';
 export const TILES_WALK = [A_FLOOR, A_LOBBY];
 
 // Luggage
@@ -62,3 +63,7 @@ export const SPAWN_DELAY_PASSENGERS = 3000;
 export const HUD_TOP_HEIGHT = 20;
 export const HUD_BOTTOM_HEIGHT = 20;
 export const TIMETABLE_ROW_HEIGHT = 18;
+
+// Colors
+export const BELT_MAIN_COLOR = '#403f3f';
+export const BELT_SIDE_COLOR = '#6f6d6e';

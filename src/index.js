@@ -25,8 +25,11 @@ class Game {
     this.assets = assets;
     this.loaded = this.assets.loaded;
 
-    this.setEventHandlers();
+    this.noMoreLevels = false;
 
+    this.setEventHandlers();
+    this.map = map;
+    // Generate empty map
     this.loadLevel();
 
     this.tutorial = [{
@@ -59,6 +62,7 @@ class Game {
   }
 
   loadLevel() {
+    this.loadingLevel = true;
     this.time = new Date();
     this.time.setHours(9);
     this.time.setMinutes(0);
@@ -67,11 +71,10 @@ class Game {
     this.loadFlights();
     this.lost = false;
 
-    this.map = map;
-    // Generate empty map
     this.map.generate();
 
     // Generate belt
+    this.belts = [];
     this.belts = this.generateBelts();
 
     // Put all together
@@ -80,6 +83,8 @@ class Game {
     this.hud = new Hud(this.flights);
 
     this.ready = false;
+    this.win = false;
+    this.lost = false;
   }
 
   loadFlights() {
@@ -116,32 +121,36 @@ class Game {
   start() {
     let lastTime = (new Date()).getTime();
     const gameLoop = () => {
-      const currentTime = (new Date()).getTime();
-      if (currentTime - lastTime >= 1000) {
-        lastTime = currentTime;
-        this.time.setSeconds(this.time.getSeconds() + 60);
-      }
-
-      this.checkWin();
-
-      if (this.win) {
-        this.nextLevel();
-      } else {
-        if (this.tutorial) {
-          this.update();
-          this.render();
+      if (!this.pause) {
+        const currentTime = (new Date()).getTime();
+        if (currentTime - lastTime >= 1000) {
+          lastTime = currentTime;
+          this.time.setSeconds(this.time.getSeconds() + 60);
         }
 
-        if (!this.lost) {
-          this.update();
-          this.render();
-          this.checkLost();
-
-          raf(gameLoop);
+        if (this.win) {
+          this.nextLevel();
         } else {
-          alert('you lost');
+          if (!this.lost) {
+            this.update();
+            this.render();
+            this.checkLost();
+
+            // raf(gameLoop);
+          } else {
+            this.render();
+            setTimeout(() => location.href = '/', 4000);
+          }
+
+          this.checkWin();
+        }
+      } else {
+        if (keys.isPressed(32)) {
+          this.pause = false;
         }
       }
+
+      raf(gameLoop);
     };
 
     raf(gameLoop);
@@ -211,11 +220,25 @@ class Game {
 
   checkWin() {
     const completed = this.flights.filter(f => f.status !== COMPLETED);
+    let win = false;
 
-    if (completed.length) {
-      this.win = false;
-    } else {
+    if (!completed.length) {
+      if (this.tutorial.length) {
+        win = this.passengers[0].left;
+      } else {
+        win = true;
+      }
+    }
+
+    if (win) {
+      const nextLevel = level.id + 1;
+
+      if (!config[nextLevel]) this.noMoreLevels = true;
+      this.pause = true;
+      this.renderLevelWin();
       this.win = true;
+    } else {
+      this.win = win;
     }
   }
 
@@ -223,13 +246,19 @@ class Game {
     const nextLevel = level.id + 1;
 
     if (config[nextLevel]) {
-      console.log(config[nextLevel]);
+      level.id = nextLevel;
+      this.loadLevel();
     } else {
-      console.log('no more levels');
+      this.noMoreLevels = true;
     }
   }
 
   update() {
+    if (!this.ready && keys.isPressed(32)) {
+      if (this.tutorial.length) this.tutorial.shift();
+      this.ready = true;
+    }
+
     this.passengers.forEach(p => {
       p.update();
     });
@@ -242,12 +271,7 @@ class Game {
 
     this.hud.update(this.getTime());
 
-    if (!this.ready && keys.isPressed(32)) {
-      this.tutorial.shift();
-      this.ready = true;
-    }
-
-    if (this.tutorial[0].id > 1) {
+    if (level.id === 0 && this.tutorial[0].id > 1) {
       this.updateTutorial();
     }
   }
@@ -267,6 +291,97 @@ class Game {
         });
       }
     }
+  }
+
+  renderLevelIntro() {
+    this.ctx.font = '64px Impact';
+    this.ctx.fillStyle = '#dab821';
+    this.ctx.strokeStyle = '#000';
+    this.ctx.textBaseline = 'top';
+
+    let text = `LEVEL ${level.id} of ${config.length - 1}`;
+    let x = (canvas.width / 2) - (this.ctx.measureText(text).width / 2);
+    let y = 50;
+
+    this.ctx.shadowColor = 'black';
+    this.ctx.shadowOffsetX = 3;
+    this.ctx.shadowOffsetY = 3;
+    this.ctx.shadowBlur = 7;
+    this.ctx.fillText(text, x, y);
+    this.ctx.strokeText(text, x, y);
+
+    this.ctx.shadowColor = 'transparent';
+
+    setTimeout(() => {
+      this.loadingLevel = false;
+      this.ready = true;
+    }, 2000);
+  }
+
+  renderLevelWin() {
+    this.ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+    this.ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    this.ctx.font = '64px Impact';
+    this.ctx.fillStyle = '#dab821';
+    this.ctx.strokeStyle = '#000';
+    this.ctx.textBaseline = 'top';
+
+    let text = this.noMoreLevels ? 'ALL LEVELS COMPLETED' : 'LEVEL COMPLETED';
+    let x = (canvas.width / 2) - (this.ctx.measureText(text).width / 2);
+    let y = 50;
+
+    this.ctx.shadowColor = 'black';
+    this.ctx.shadowOffsetX = 3;
+    this.ctx.shadowOffsetY = 3;
+    this.ctx.shadowBlur = 7;
+    this.ctx.fillText(text, x, y);
+    this.ctx.strokeText(text, x, y);
+
+    this.ctx.shadowColor = 'transparent';
+
+    if (!this.noMoreLevels) {
+      text = 'PRESS SPACE KEY TO CONTINUE';
+
+      this.ctx.font = '18px Impact';
+      this.ctx.fillStyle = '#dab821';
+      this.ctx.strokeStyle = '#000';
+      this.ctx.textBaseline = 'top';
+
+      x = (canvas.width / 2) - (this.ctx.measureText(text).width / 2);
+      y = canvas.height - 100;
+
+      this.ctx.shadowColor = 'black';
+      this.ctx.shadowOffsetX = 3;
+      this.ctx.shadowOffsetY = 3;
+      this.ctx.shadowBlur = 7;
+      this.ctx.fillText(text, x, y);
+      this.ctx.strokeText(text, x, y);
+      this.ctx.shadowColor = 'transparent';
+    }
+  }
+
+  renderLevelLost() {
+    this.ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+    this.ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    this.ctx.font = '64px Impact';
+    this.ctx.fillStyle = '#dab821';
+    this.ctx.strokeStyle = '#000';
+    this.ctx.textBaseline = 'top';
+
+    let text = 'YOU LOST';
+    let x = (canvas.width / 2) - (this.ctx.measureText(text).width / 2);
+    let y = 50;
+
+    this.ctx.shadowColor = 'black';
+    this.ctx.shadowOffsetX = 3;
+    this.ctx.shadowOffsetY = 3;
+    this.ctx.shadowBlur = 7;
+    this.ctx.fillText(text, x, y);
+    this.ctx.strokeText(text, x, y);
+
+    this.ctx.shadowColor = 'transparent';
   }
 
   renderIntro() {
@@ -342,10 +457,16 @@ class Game {
     if (this.ready) this.hud.render();
 
     if (!this.ready) {
-      this.renderIntro();
+      if (level.id === 0) {
+        this.renderIntro();
+      }
     }
 
-    this.renderTutorial();
+    if (this.loadingLevel && this.tutorial.length === 0) this.renderLevelIntro();
+
+    if (level.id === 0) this.renderTutorial();
+
+    if (this.lost) this.renderLevelLost();
   }
 
   setEventHandlers() {
@@ -358,19 +479,27 @@ class Game {
 
       // const x = CANVAS_WIDTH * (e.pageX - coords.left) / coords.width;
       // const y = CANVAS_HEIGHT * (e.pageY - coords.top) / coords.height;
-
       map.tiles.forEach(tile => {
         if (tile.isInside(x, y)) {
           this.passengers.forEach(player => {
             if (player.insideTile(tile)) {
               player.selected = !player.selected;
 
-              if (this.tutorial[0].id === 1) this.updateTutorial();
+              player.luggages.forEach(l => {
+                l.selected = player.selected;
+              });
+
+              if (this.tutorial.length && this.tutorial[0].id === 1) this.updateTutorial();
 
               // Deselect others
               if (player.selected) {
                 this.passengers.forEach(p => {
-                  if (p !== player) p.selected = false;
+                  if (p !== player) {
+                    p.selected = false;
+                    p.luggages.forEach(l => {
+                      l.selected = false;
+                    });
+                  }
                 });
               }
             }

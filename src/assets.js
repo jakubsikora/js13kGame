@@ -6,6 +6,7 @@ import {
   A_BELT_END,
   A_BELT_NUMBER,
   A_LOBBY,
+  A_LUGGAGE,
   A_EXIT,
   A_WALL_N,
   A_WALL_E,
@@ -18,6 +19,8 @@ import {
   TILE_TYPE_EXIT,
   TILE_TYPE_WALL_N,
   TILE_TYPE_WALL_E,
+  BELT_MAIN_COLOR,
+  BELT_SIDE_COLOR,
 } from './constants';
 
 class Assets {
@@ -49,6 +52,9 @@ class Assets {
       name: A_CHARACTER,
       src: require('./assets/character.png'),
     }, {
+      name: A_LUGGAGE,
+      src: require('./assets/sprites.png'),
+    }, {
       name: 'Exit1',
       src: require('./assets/exit.png'),
     }, {
@@ -69,7 +75,7 @@ class Assets {
         ctx.closePath();
 
         ctx.lineWidth = 1;
-        ctx.fillStyle = '#403f3f';
+        ctx.fillStyle = BELT_MAIN_COLOR;
         ctx.fill();
 
         const x2 = x;
@@ -83,7 +89,7 @@ class Assets {
         ctx.lineTo(x2, cy2);
         ctx.closePath();
 
-        ctx.fillStyle = '#403f3f';
+        ctx.fillStyle = BELT_MAIN_COLOR;
         ctx.fill();
 
         ctx.beginPath();
@@ -93,7 +99,7 @@ class Assets {
         ctx.lineTo(cx1, y1 + h);
         ctx.closePath();
 
-        ctx.fillStyle = '#6f6d6e';
+        ctx.fillStyle = BELT_SIDE_COLOR;
         ctx.fill();
 
         ctx.beginPath();
@@ -103,7 +109,7 @@ class Assets {
         ctx.lineTo(cx2, y2 + h);
         ctx.closePath();
 
-        ctx.fillStyle = '#6f6d6e';
+        ctx.fillStyle = BELT_SIDE_COLOR;
         ctx.fill();
       },
     }, {

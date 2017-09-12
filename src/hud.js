@@ -249,26 +249,15 @@ export default class Hud {
 
     this.ctx.fillText(text, textX, textY);
 
-    let luggageX = x + 5;
-    let luggageY = textY + 25;
-
+    let luggageLeft = 0;
     this.selectedPassenger.luggages.forEach(l => {
-      if (l.collected) {
-        this.ctx.fillStyle = this.hex2rgba(l.color);
-      } else {
-        this.ctx.fillStyle = this.hex2rgba(l.color, 0.5);
-      }
-      this.ctx.fillRect(luggageX, luggageY, 10, 10);
-      this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
-      this.ctx.strokeRect(luggageX, luggageY, 10, 10);
+      if (!l.collected) luggageLeft++;
     });
-  }
 
-  hex2rgba(hex, a = 1) {
-    const r = parseInt(hex.slice(1, 3), 16);
-    const g = parseInt(hex.slice(3, 5), 16);
-    const b = parseInt(hex.slice(5, 7), 16);
+    text = `Luggages left: ${luggageLeft}`;
+    textX = x + 2;
+    textY = textY + 20;
 
-    return `rgba(${r}, ${g}, ${b}, ${a})`;
+    this.ctx.fillText(text, textX, textY);
   }
 }

@@ -1,7 +1,14 @@
+import assets from './assets';
 import canvas from './canvas';
 import map from './map';
 import config from './config';
 import level from './level';
+import {
+  A_LUGGAGE,
+} from './constants';
+
+const IMAGE_WIDTH = 20;
+const IMAGE_HEIGHT = 21;
 
 export default class Luggage {
   constructor() {
@@ -21,12 +28,14 @@ export default class Luggage {
     this.nextTile = null;
     this.updatePath = false;
     this.moving = false;
-    this.speed = 0.5;
+    this.speed = config[level.id].luggage.speed;
     this.loop = config[level.id].loop;
+    this.image = assets.getByName(A_LUGGAGE).img;
 
     this.reset = false;
     this.lost = false;
     this.color = '#ffffff';
+    this.selected = false;
 
     this.randomize();
   }
@@ -37,7 +46,34 @@ export default class Luggage {
 
   // TODO: randomize size/color etc.
   randomize() {
-
+    const index = Math.floor(Math.random() * 4);
+    console.log(index);
+    this.directionMap = {
+      S: {
+        w: IMAGE_WIDTH,
+        h: IMAGE_HEIGHT,
+        x: (index * IMAGE_WIDTH),
+        y: IMAGE_HEIGHT,
+      },
+      N: {
+        w: IMAGE_WIDTH,
+        h: IMAGE_HEIGHT,
+        x: (index * IMAGE_WIDTH),
+        y: IMAGE_HEIGHT,
+      },
+      E: {
+        w: IMAGE_WIDTH,
+        h: IMAGE_HEIGHT,
+        x: (index * IMAGE_WIDTH),
+        y: 0,
+      },
+      W: {
+        w: IMAGE_WIDTH,
+        h: IMAGE_HEIGHT,
+        x: (index * IMAGE_WIDTH),
+        y: 0,
+      },
+    };
   }
 
   followPath() {
@@ -139,11 +175,38 @@ export default class Luggage {
   render() {
     if (this.collected || this.lost) return;
 
-    this.ctx.fillStyle = this.color;
-    this.ctx.fillRect(
-      this.realPosition[0] - 5,
-      this.realPosition[1] - 10,
-      this.w,
-      this.h);
+    this.directionCoords = this.directionMap[this.direction];
+
+    // this.ctx.fillStyle = this.color;
+    // this.ctx.fillRect(
+    //   this.realPosition[0] - 5,
+    //   this.realPosition[1] - 10,
+    //   this.w,
+    //   this.h);
+    this.ctx.drawImage(
+      this.image,
+      this.directionCoords.x,
+      this.directionCoords.y,
+      this.directionCoords.w,
+      this.directionCoords.h,
+      this.realPosition[0] - 10,
+      this.realPosition[1] - 15,
+      IMAGE_WIDTH,
+      IMAGE_HEIGHT,
+    );
+
+    if (this.selected) {
+      this.ctx.beginPath();
+      this.ctx.arc(
+        this.realPosition[0],
+        this.realPosition[1] - this.h - 10,
+        3,
+        0,
+        2 * Math.PI,
+      );
+
+      this.ctx.fillStyle = 'rgba(244, 67, 54, 0.7)';
+      this.ctx.fill();
+    }
   }
 }
