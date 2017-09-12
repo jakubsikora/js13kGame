@@ -47,6 +47,8 @@ export default class Tile {
         this.renderRaw();
         this.ctx.fillStyle = this.asset.bgColor;
         this.ctx.fill();
+        this.ctx.strokeStyle = this.asset.bgColor;
+        this.ctx.stroke();
       }
 
       if (this.hovered) {

@@ -67,3 +67,12 @@ export const TIMETABLE_ROW_HEIGHT = 18;
 // Colors
 export const BELT_MAIN_COLOR = '#403f3f';
 export const BELT_SIDE_COLOR = '#6f6d6e';
+export const BG_COLOR = '#000';
+export const GLASS_COLOR = '#80c3c2';
+export const GLASS_STROKE_COLOR = '#669595';
+export const FLOOR_COLOR = '#bab0ad';
+export const WALL_COLOR = '#939aa7';
+export const LOBBY_COLOR = '#4e5258';
+
+
+

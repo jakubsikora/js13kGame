@@ -16,7 +16,8 @@ import {
   CANVAS_WIDTH,
   CANVAS_HEIGHT,
   COMPLETED,
-  WAITING } from './constants';
+  WAITING,
+  BG_COLOR } from './constants';
 
 class Game {
   constructor() {
@@ -442,7 +443,7 @@ class Game {
   render() {
     this.ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    this.ctx.fillStyle = '#000';
+    this.ctx.fillStyle = BG_COLOR;
     this.ctx.fillRect(0, 0, canvas.width, canvas.height);
     this.map.render();
 
