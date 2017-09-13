@@ -11,45 +11,44 @@ export const T_H = 26;
 export const T_W = 52;
 export const T_T_P = 1;
 export const T_T_B = 2;
-export const T_T_B_START = 3;
-export const T_T_B_END = 4;
-export const TILE_TYPE_LOBBY = 5;
-export const TILE_TYPE_EXIT = 6;
-export const TILE_TYPE_WALL_N = 7;
-export const TILE_TYPE_WALL_E = 8;
-export const T_T_B_NUMBER = 9;
-export const TILE_TYPE_LOBBY_WALL = 10;
+export const T_T_B_S = 3;
+export const T_T_B_E = 4;
+export const T_T_L = 5;
+export const T_T_E = 6;
+export const T_T_WN = 7;
+export const T_T_WE = 8;
+export const T_T_B_N = 9;
+export const T_T_L_W = 10;
 
 // Paths
-export const PATH_LOCATION_STATUS_INVALID = 'Invalid';
-export const PATH_LOCATION_STATUS_VALID = 'Valid';
-export const PATH_LOCATION_STATUS_BLOCKED = 'Blocked';
-export const PATH_LOCATION_STATUS_VISITED = 'Visited';
-export const PATH_LOCATION_STATUS_END = 'End';
+export const P_I = '0';
+export const P_V = '1';
+export const P_B = '2';
+export const P_VI = '3';
+export const P_E = '4';
 
 // Assets
-export const A_FLOOR = 'Floor';
-export const A_PAX = 'Character';
-export const A_BELT = 'Belt';
-export const A_BELT_NUMBER = 'Belt Number';
-export const A_BELT_START = 'Belt Start';
-export const A_BELT_END = 'Belt End';
-export const A_LOBBY = 'Lobby';
-export const A_LOBBY_WALL = 'Lobby Wall';
-export const A_EXIT = 'Exit';
-export const A_WALL_N = 'WallN';
-export const A_WALL_E = 'WallE';
-export const A_LUGGAGE = 'Luggage';
-export const A_SPRITESHEET = 'Spritesheet';
-export const TILES_WALK = [A_FLOOR, A_LOBBY];
+export const AF = 1;
+export const AP = 2;
+export const AB = 3;
+export const ABN = 4;
+export const AB_START = 5;
+export const AB_END = 6;
+export const A_LOBBY = 7;
+export const A_LOBBY_WALL = 8;
+export const A_EXIT = 9;
+export const A_WALL_N = 10;
+export const A_WALL_E = 11;
+export const A_SPRITESHEET = 12;
+export const TILES_WALK = [AF, A_LOBBY];
 
 // Luggage
-export const PLAYER_MAP_OFFSET = 20;
+export const P_M_O = 20;
 
 // Belt
 export const BELT_D = 1;
 export const BELT_L = 10;
-export const SPAWN_DELAY_BELT = 5000;
+export const S_D_B = 5000;
 
 // Flight
 export const ONTIME = 'ON TIME';
@@ -60,19 +59,19 @@ export const COMPLETED = 'COMPLETED';
 export const HIDE = 'HIDE';
 
 // Passenger
-export const SPAWN_DELAY_PASSENGERS = 3000;
+export const S_D_P = 3000;
 
 // HUD
-export const HUD_TOP_HEIGHT = 20;
-export const HUD_BOTTOM_HEIGHT = 20;
-export const TIMETABLE_ROW_HEIGHT = 18;
+export const HTH = 20;
+export const HBH = 20;
+export const TRH = 18;
 
 // Colors
-export const BELT_MAIN_COLOR = '#403f3f';
-export const BELT_SIDE_COLOR = '#6f6d6e';
-export const BG_COLOR = '#000';
-export const GLASS_COLOR = '#80c3c2';
-export const GLASS_STROKE_COLOR = '#669595';
-export const FLOOR_COLOR = '#bab0ad';
-export const WALL_COLOR = '#939aa7';
-export const LOBBY_COLOR = '#4e5258';
+export const BELT_MAIN_C = '#403f3f';
+export const BELT_SIDE_C = '#6f6d6e';
+export const BG_C = '#000';
+export const GLASS_C = '#80c3c2';
+export const GLASS_STROKE_C = '#669595';
+export const FLOOR_C = '#bab0ad';
+export const WALL_C = '#939aa7';
+export const LOBBY_C = '#4e5258';

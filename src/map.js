@@ -4,15 +4,15 @@ import {
   M_R,
   M_C,
   T_T_P,
-  TILE_TYPE_LOBBY,
-  TILE_TYPE_EXIT,
-  TILE_TYPE_WALL_N,
-  TILE_TYPE_WALL_E,
-  TILE_TYPE_LOBBY_WALL,
+  T_T_L,
+  T_T_E,
+  T_T_WN,
+  T_T_WE,
+  T_T_L_W,
   C_W,
   C_H,
   TILES_WALK,
-  A_BELT,
+  AB,
 } from './constants';
 import Tile from './tile';
 import assets from './assets';
@@ -98,15 +98,15 @@ class Map {
       this.grid.push([]);
       for (let y = 0; y < this.cols; y++) {
         if (y === 0 && (x === 10 || x === 11)) {
-          this.grid[x].push(TILE_TYPE_EXIT);
+          this.grid[x].push(T_T_E);
         } else if (y === 0) {
-          this.grid[x].push(TILE_TYPE_WALL_N);
+          this.grid[x].push(T_T_WN);
         } else if (x === 0) {
-          this.grid[x].push(TILE_TYPE_WALL_E);
+          this.grid[x].push(T_T_WE);
         } else if (y > 3 && (x === this.cols - 1 || x === this.cols - 2)) {
-          this.grid[x].push(TILE_TYPE_LOBBY);
+          this.grid[x].push(T_T_L);
         } else if (y > 3 && (x === this.cols - 3)) {
-          this.grid[x].push(TILE_TYPE_LOBBY_WALL);
+          this.grid[x].push(T_T_L_W);
         } else {
           this.grid[x].push(T_T_P);
         }

@@ -12,11 +12,11 @@ import level from './level';
 import Hud from './hud';
 import {
   T_T_P,
-  TILE_TYPE_LOBBY,
+  T_T_L,
   M_R,
   COMPLETED,
   WAITING,
-  BG_COLOR } from './constants';
+  BG_C } from './constants';
 
 class Game {
   constructor() {
@@ -443,7 +443,7 @@ class Game {
   render() {
     this.ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    this.ctx.fillStyle = BG_COLOR;
+    this.ctx.fillStyle = BG_C;
     this.ctx.fillRect(0, 0, canvas.width, canvas.height);
     this.map.render();
 
@@ -514,7 +514,7 @@ class Game {
                     [player.nextTile[0], player.nextTile[1]],
                     [tile.gridX, tile.gridY],
                     this.map.grid,
-                    [T_T_P, TILE_TYPE_LOBBY],
+                    [T_T_P, T_T_L],
                   );
 
                   player.tempPath = tempPath.findShortestPath();
@@ -524,7 +524,7 @@ class Game {
                   [player.playerTile.gridX, player.playerTile.gridY],
                   [tile.gridX, tile.gridY],
                   this.map.grid,
-                  [T_T_P, TILE_TYPE_LOBBY],
+                  [T_T_P, T_T_L],
                 );
 
                 player.path = path.findShortestPath();

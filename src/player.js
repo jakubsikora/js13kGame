@@ -7,11 +7,11 @@ import level from './level';
 import Path from './path';
 
 import {
-  A_PAX,
-  PLAYER_MAP_OFFSET,
+  AP,
+  P_M_O,
   A_LOBBY,
   T_T_P,
-  TILE_TYPE_EXIT,
+  T_T_E,
 } from './constants';
 
 const IMAGE_WIDTH = 50;
@@ -27,7 +27,7 @@ export default class Player {
     this.speed = 1;
     this.map = map;
     this.direction = 'N';
-    this.image = assets.getByName(A_PAX).img;
+    this.image = assets.getByName(AP).img;
     this.frameIndex = 0;
     this.tickCount = 0;
     this.ticksPerFrame = 10;
@@ -156,10 +156,10 @@ export default class Player {
     if (this.waitingLuggages.length) {
       this.waitingLuggages.forEach(l => {
         const rect1 = {
-          x: this.x - (PLAYER_MAP_OFFSET / 2),
-          y: this.y - (PLAYER_MAP_OFFSET / 2),
-          w: this.w + PLAYER_MAP_OFFSET,
-          h: this.h + PLAYER_MAP_OFFSET,
+          x: this.x - (P_M_O / 2),
+          y: this.y - (P_M_O / 2),
+          w: this.w + P_M_O,
+          h: this.h + P_M_O,
         };
 
         const rect2 = {
@@ -188,7 +188,7 @@ export default class Player {
         [this.nextTile[0], this.nextTile[1]],
         [tile.gridX, tile.gridY],
         this.map.grid,
-        [T_T_P, TILE_TYPE_EXIT],
+        [T_T_P, T_T_E],
       );
 
       this.tempPath = tempPath.findShortestPath();

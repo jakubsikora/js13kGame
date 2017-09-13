@@ -1,9 +1,9 @@
 import {
-  PATH_LOCATION_STATUS_INVALID,
-  PATH_LOCATION_STATUS_VALID,
-  PATH_LOCATION_STATUS_BLOCKED,
-  PATH_LOCATION_STATUS_VISITED,
-  PATH_LOCATION_STATUS_END } from './constants';
+  P_I,
+  P_V,
+  P_B,
+  P_VI,
+  P_E } from './constants';
 
 export default class Path {
   constructor(start, end, grid, validType) {
@@ -41,12 +41,12 @@ export default class Path {
       directions.some(dir => {
         const newLocation = this.exploreInDirection(currentLocation, dir, this.grid);
 
-        if (newLocation.status === PATH_LOCATION_STATUS_END) {
+        if (newLocation.status === P_E) {
           if (!newPath.length
              || (newPath.length && newLocation.path.length < newPath.length)) {
             newPath = newLocation.path;
           }
-        } else if (newLocation.status === PATH_LOCATION_STATUS_VALID) {
+        } else if (newLocation.status === P_V) {
           queue.push(newLocation);
         }
       });
@@ -107,14 +107,14 @@ export default class Path {
         location.distanceFromTop < 0 ||
         location.distanceFromTop >= gridSize) {
       // location is not on the grid--return false
-      return PATH_LOCATION_STATUS_INVALID;
+      return P_I;
     } else if (this.validType.indexOf(grid[dft][dfl]) === -1) {
       // location is either an obstacle or has been visited
-      return PATH_LOCATION_STATUS_BLOCKED;
+      return P_B;
     } else if (dft === this.end[0] && dfl === this.end[1]) {
-      return PATH_LOCATION_STATUS_END;
+      return P_E;
     } else {
-      return PATH_LOCATION_STATUS_VALID;
+      return P_V;
     }
   }
 
@@ -145,9 +145,9 @@ export default class Path {
     newLocation.status = this.locationStatus(newLocation, grid);
 
     // If this new location is valid, mark it as 'Visited'
-    if (newLocation.status === PATH_LOCATION_STATUS_VALID) {
+    if (newLocation.status === P_V) {
       grid[newLocation.distanceFromTop][newLocation.distanceFromLeft] =
-        PATH_LOCATION_STATUS_VISITED;
+        P_VI;
     }
 
     return newLocation;

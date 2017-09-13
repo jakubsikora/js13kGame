@@ -18,39 +18,13 @@ export default class Signs {
     this.ctx.drawImage(
       this.image,
       0,
-      142,
+      42,
       IMAGE_WIDTH,
       IMAGE_HEIGHT,
       634,
       155,
       IMAGE_WIDTH + 6,
       IMAGE_HEIGHT + 4,
-    );
-
-    // Terminals
-    this.ctx.drawImage(
-      this.image,
-      0,
-      92,
-      IMAGE_WIDTH,
-      IMAGE_HEIGHT,
-      722,
-      208,
-      IMAGE_WIDTH,
-      IMAGE_HEIGHT,
-    );
-
-    // // Toilets
-    this.ctx.drawImage(
-      this.image,
-      0,
-      42,
-      IMAGE_WIDTH,
-      IMAGE_HEIGHT,
-      499,
-      95,
-      IMAGE_WIDTH,
-      IMAGE_HEIGHT,
     );
   }
 }

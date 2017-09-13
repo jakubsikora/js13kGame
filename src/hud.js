@@ -2,12 +2,12 @@ import level from './level';
 import config from './config';
 import canvas from './canvas';
 import {
-  HUD_TOP_HEIGHT,
-  HUD_BOTTOM_HEIGHT,
+  HTH,
+  HBH,
   C_W,
   C_H,
   LANDED,
-  TIMETABLE_ROW_HEIGHT,
+  TRH,
 } from './constants';
 
 export default class Hud {
@@ -93,14 +93,14 @@ export default class Hud {
 
   renderTop() {
     this.ctx.strokeStyle = '#464243';
-    this.ctx.strokeRect(0, 0, canvas.width, HUD_TOP_HEIGHT);
+    this.ctx.strokeRect(0, 0, canvas.width, HTH);
 
     this.renderTime();
     this.renderGeneralInfo();
   }
 
   renderBottom() {
-    const height = HUD_BOTTOM_HEIGHT;
+    const height = HBH;
     const y = canvas.height - height;
 
     this.ctx.strokeStyle = '#464243';
@@ -157,23 +157,23 @@ export default class Hud {
   renderFlightTable() {
     const width = 250;
     let x = C_W - width;
-    let y = C_H - HUD_BOTTOM_HEIGHT;
+    let y = C_H - HBH;
 
     this.ctx.font = '16px Helvetica';
     this.ctx.fillStyle = '#dab821';
     this.ctx.textBaseline = 'top';
 
     this.ctx.strokeStyle = '#464243';
-    this.ctx.strokeRect(x, y, width, HUD_BOTTOM_HEIGHT);
+    this.ctx.strokeRect(x, y, width, HBH);
 
     const flights = [...this.flights];
     flights.reverse();
 
     flights.forEach(f => {
       this.ctx.font = '12px Helvetica';
-      y -= TIMETABLE_ROW_HEIGHT;
+      y -= TRH;
       this.ctx.strokeStyle = '#464243';
-      this.ctx.strokeRect(x, y, width, TIMETABLE_ROW_HEIGHT);
+      this.ctx.strokeRect(x, y, width, TRH);
 
       let tx = x + 2;
       const ty = y + 2;
@@ -194,9 +194,9 @@ export default class Hud {
       this.ctx.fillText(flightText, tx, ty);
     });
 
-    y -= TIMETABLE_ROW_HEIGHT;
+    y -= TRH;
     this.ctx.strokeStyle = '#464243';
-    this.ctx.strokeRect(x, y, width, TIMETABLE_ROW_HEIGHT);
+    this.ctx.strokeRect(x, y, width, TRH);
 
     this.ctx.font = '16px Helvetica';
     const text = 'Arrivals';

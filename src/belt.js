@@ -4,11 +4,11 @@ import Path from './path';
 import {
   BELT_L,
   T_T_B,
-  T_T_B_START,
-  T_T_B_END,
-  T_T_B_NUMBER,
+  T_T_B_S,
+  T_T_B_E,
+  T_T_B_N,
   T_T_P,
-  SPAWN_DELAY_BELT } from './constants';
+  S_D_B } from './constants';
 
 export default class Belt {
   constructor(start, end, pos, number) {
@@ -42,7 +42,7 @@ export default class Belt {
     }
 
     map.grid[BELT_L - 1][this.pos - 1] = T_T_B;
-    map.grid[BELT_L - 2][this.pos - 1] = T_T_B_NUMBER;
+    map.grid[BELT_L - 2][this.pos - 1] = T_T_B_N;
     map.grid[1][this.pos - 1] = T_T_P;
 
 
@@ -50,14 +50,14 @@ export default class Belt {
       map.grid[x][this.pos - 2] = T_T_B;
     }
 
-    map.grid[this.start[0]][this.start[1]] = T_T_B_START;
-    map.grid[this.end[0]][this.end[1]] = T_T_B_END;
+    map.grid[this.start[0]][this.start[1]] = T_T_B_S;
+    map.grid[this.end[0]][this.end[1]] = T_T_B_E;
 
     const path = new Path(
       this.start,
       this.end,
       map.grid,
-      [T_T_B, T_T_B_START, T_T_B_END],
+      [T_T_B, T_T_B_S, T_T_B_E],
     );
 
     this.path = path.findShortestPath();
@@ -65,7 +65,7 @@ export default class Belt {
 
   spawn() {
     const luggage = this.waitingLuggages.shift();
-    const rand = Math.round(Math.random() * SPAWN_DELAY_BELT) + 1000;
+    const rand = Math.round(Math.random() * S_D_B) + 1000;
 
     setTimeout(() => {
       this.luggages.push(luggage);

@@ -1,10 +1,10 @@
 import {
-  A_FLOOR,
-  A_PAX,
-  A_BELT,
-  A_BELT_START,
-  A_BELT_END,
-  A_BELT_NUMBER,
+  AF,
+  AP,
+  AB,
+  AB_START,
+  AB_END,
+  ABN,
   A_LOBBY,
   A_LOBBY_WALL,
   A_SPRITESHEET,
@@ -13,27 +13,27 @@ import {
   A_WALL_E,
   T_T_P,
   T_T_B,
-  T_T_B_START,
-  T_T_B_END,
-  T_T_B_NUMBER,
-  TILE_TYPE_LOBBY,
-  TILE_TYPE_LOBBY_WALL,
-  TILE_TYPE_EXIT,
-  TILE_TYPE_WALL_N,
-  TILE_TYPE_WALL_E,
-  BELT_MAIN_COLOR,
-  BELT_SIDE_COLOR,
-  GLASS_COLOR,
-  GLASS_STROKE_COLOR,
-  FLOOR_COLOR,
-  WALL_COLOR,
-  LOBBY_COLOR,
+  T_T_B_S,
+  T_T_B_E,
+  T_T_B_N,
+  T_T_L,
+  T_T_L_W,
+  T_T_E,
+  T_T_WN,
+  T_T_WE,
+  BELT_MAIN_C,
+  BELT_SIDE_C,
+  GLASS_C,
+  GLASS_STROKE_C,
+  FLOOR_C,
+  WALL_C,
+  LOBBY_C,
 } from './constants';
 
 class Assets {
   constructor() {
     this.items = [{
-      name: A_FLOOR,
+      name: AF,
       type: T_T_P,
       render(x, y, w, h, ctx) {
         const cx = x + (w * 0.5);
@@ -46,19 +46,19 @@ class Assets {
         ctx.lineTo(x, cy);
         ctx.lineWidth = 0;
         ctx.closePath();
-        ctx.fillStyle = FLOOR_COLOR;
-        ctx.strokeStyle = FLOOR_COLOR;
+        ctx.fillStyle = FLOOR_C;
+        ctx.strokeStyle = FLOOR_C;
         ctx.stroke();
         ctx.fill();
       },
     }, {
-      name: A_PAX,
+      name: AP,
       src: require('./assets/passenger.png'),
     }, {
       name: A_SPRITESHEET,
       src: require('./assets/spritesheet.png'),
     }, {
-      name: A_BELT,
+      name: AB,
       bgColor: '#607d8b',
       type: T_T_B,
       render(x, y, w, h, ctx) {
@@ -75,7 +75,7 @@ class Assets {
         ctx.closePath();
 
         ctx.lineWidth = 1;
-        ctx.fillStyle = BELT_MAIN_COLOR;
+        ctx.fillStyle = BELT_MAIN_C;
         ctx.fill();
 
         const x2 = x;
@@ -89,7 +89,7 @@ class Assets {
         ctx.lineTo(x2, cy2);
         ctx.closePath();
 
-        ctx.fillStyle = BELT_MAIN_COLOR;
+        ctx.fillStyle = BELT_MAIN_C;
         ctx.fill();
 
         ctx.beginPath();
@@ -99,7 +99,7 @@ class Assets {
         ctx.lineTo(cx1, y1 + h);
         ctx.closePath();
 
-        ctx.fillStyle = BELT_SIDE_COLOR;
+        ctx.fillStyle = BELT_SIDE_C;
         ctx.fill();
 
         ctx.beginPath();
@@ -109,13 +109,13 @@ class Assets {
         ctx.lineTo(cx2, y2 + h);
         ctx.closePath();
 
-        ctx.fillStyle = BELT_SIDE_COLOR;
+        ctx.fillStyle = BELT_SIDE_C;
         ctx.fill();
       },
     }, {
       name: A_LOBBY_WALL,
       bgColor: '#607d8b',
-      type: TILE_TYPE_LOBBY_WALL,
+      type: T_T_L_W,
       render(x, y, w, h, ctx) {
         const d = 20;
         const x1 = x;
@@ -130,9 +130,9 @@ class Assets {
         ctx.closePath();
 
         ctx.lineWidth = 1;
-        ctx.fillStyle = BELT_MAIN_COLOR;
+        ctx.fillStyle = BELT_MAIN_C;
         ctx.fill();
-        ctx.strokeStyle = BELT_MAIN_COLOR;
+        ctx.strokeStyle = BELT_MAIN_C;
         ctx.stroke();
 
         const x2 = x;
@@ -146,9 +146,9 @@ class Assets {
         ctx.lineTo(x2, cy2);
         ctx.closePath();
 
-        ctx.fillStyle = BELT_MAIN_COLOR;
+        ctx.fillStyle = BELT_MAIN_C;
         ctx.fill();
-        ctx.strokeStyle = BELT_MAIN_COLOR;
+        ctx.strokeStyle = BELT_MAIN_C;
         ctx.stroke();
 
         ctx.beginPath();
@@ -158,7 +158,7 @@ class Assets {
         ctx.lineTo(cx1, y1 + h);
         ctx.closePath();
 
-        ctx.fillStyle = WALL_COLOR;
+        ctx.fillStyle = WALL_C;
         ctx.fill();
 
         ctx.beginPath();
@@ -168,13 +168,13 @@ class Assets {
         ctx.lineTo(cx2, y2 + h);
         ctx.closePath();
 
-        ctx.fillStyle = WALL_COLOR;
+        ctx.fillStyle = WALL_C;
         ctx.fill();
       },
     }, {
-      name: A_BELT_START,
+      name: AB_START,
       bgColor: '#b1bdc3',
-      type: T_T_B_START,
+      type: T_T_B_S,
       render(x, y, w, h, ctx) {
         const x1 = x;
         const y1 = y;
@@ -195,9 +195,9 @@ class Assets {
         ctx.fill();
       },
     }, {
-      name: A_BELT_END,
+      name: AB_END,
       bgColor: '#b78d8d',
-      type: T_T_B_END,
+      type: T_T_B_E,
       render(x, y, w, h, ctx) {
         const x1 = x;
         const y1 = y;
@@ -219,12 +219,12 @@ class Assets {
       },
     }, {
       name: A_LOBBY,
-      bgColor: LOBBY_COLOR,
-      type: TILE_TYPE_LOBBY,
+      bgColor: LOBBY_C,
+      type: T_T_L,
     }, {
       name: A_EXIT,
       bgColor: '#ff0000',
-      type: TILE_TYPE_EXIT,
+      type: T_T_E,
       render(x, y, w, h, ctx) {
         const x1 = x;
         const y1 = y;
@@ -300,7 +300,7 @@ class Assets {
     }, {
       name: A_WALL_N,
       bgColor: '#ff0000',
-      type: TILE_TYPE_WALL_N,
+      type: T_T_WN,
       render(x, y, w, h, ctx) {
         const x1 = x;
         const y1 = y;
@@ -315,15 +315,15 @@ class Assets {
         ctx.closePath();
 
         ctx.lineWidth = 1;
-        ctx.fillStyle = WALL_COLOR;
-        ctx.strokeStyle = WALL_COLOR;
+        ctx.fillStyle = WALL_C;
+        ctx.strokeStyle = WALL_C;
         ctx.stroke();
         ctx.fill();
       },
     }, {
       name: A_WALL_E,
       bgColor: '#ffff00',
-      type: TILE_TYPE_WALL_E,
+      type: T_T_WE,
       render(x, y, w, h, ctx) {
         const x1 = x;
         const y1 = y;
@@ -338,15 +338,15 @@ class Assets {
         ctx.closePath();
 
         ctx.lineWidth = 8;
-        ctx.fillStyle = GLASS_COLOR;
-        ctx.strokeStyle = GLASS_STROKE_COLOR;
+        ctx.fillStyle = GLASS_C;
+        ctx.strokeStyle = GLASS_STROKE_C;
         ctx.stroke();
         ctx.fill();
       },
     }, {
-      name: A_BELT_NUMBER,
+      name: ABN,
       bgColor: '#607d8b',
-      type: T_T_B_NUMBER,
+      type: T_T_B_N,
       render(x, y, w, h, ctx) {
         const d = 10;
         const x1 = x;

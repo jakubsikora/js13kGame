@@ -1,5 +1,5 @@
 import Player from './player';
-import { ONTIME, LANDED, BAGS, COMPLETED, WAITING, HIDE, SPAWN_DELAY_PASSENGERS, SPAWN_DELAY_BELT } from './constants';
+import { ONTIME, LANDED, BAGS, COMPLETED, WAITING, HIDE, S_D_P, S_D_B } from './constants';
 
 export default class Flight {
   constructor(code, origin, time) {
