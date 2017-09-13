@@ -6,7 +6,6 @@ import {
   HBH,
   C_W,
   C_H,
-  LANDED,
   TRH,
 } from './constants';
 

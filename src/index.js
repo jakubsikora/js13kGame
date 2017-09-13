@@ -294,24 +294,29 @@ class Game {
     }
   }
 
+  renderText(text, x, y) {
+    this.renderShadow();
+    this.ctx.fillText(text, x, y);
+    this.ctx.shadowColor = 'transparent';
+  }
+
+  renderShadow() {
+    this.ctx.shadowColor = 'black';
+    this.ctx.shadowOffsetX = 3;
+    this.ctx.shadowOffsetY = 3;
+    this.ctx.shadowBlur = 5;
+  }
+
   renderLevelIntro() {
     this.ctx.font = '64px Impact';
     this.ctx.fillStyle = '#dab821';
-    this.ctx.strokeStyle = '#000';
     this.ctx.textBaseline = 'top';
 
     const text = `LEVEL ${level.id} of ${config.length - 1}`;
     const x = (canvas.width / 2) - (this.ctx.measureText(text).width / 2);
     const y = 50;
 
-    this.ctx.shadowColor = 'black';
-    this.ctx.shadowOffsetX = 3;
-    this.ctx.shadowOffsetY = 3;
-    this.ctx.shadowBlur = 7;
-    this.ctx.fillText(text, x, y);
-    this.ctx.strokeText(text, x, y);
-
-    this.ctx.shadowColor = 'transparent';
+    this.renderText(text, x, y);
 
     setTimeout(() => {
       this.loadingLevel = false;
@@ -320,45 +325,30 @@ class Game {
   }
 
   renderLevelWin() {
-    this.ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+    this.ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
     this.ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     this.ctx.font = '64px Impact';
     this.ctx.fillStyle = '#dab821';
-    this.ctx.strokeStyle = '#000';
     this.ctx.textBaseline = 'top';
 
     let text = this.noMoreLevels ? 'ALL LEVELS COMPLETED' : 'LEVEL COMPLETED';
     let x = (canvas.width / 2) - (this.ctx.measureText(text).width / 2);
     let y = 50;
 
-    this.ctx.shadowColor = 'black';
-    this.ctx.shadowOffsetX = 3;
-    this.ctx.shadowOffsetY = 3;
-    this.ctx.shadowBlur = 7;
-    this.ctx.fillText(text, x, y);
-    this.ctx.strokeText(text, x, y);
-
-    this.ctx.shadowColor = 'transparent';
+    this.renderText(text, x, y);
 
     if (!this.noMoreLevels) {
       text = 'PRESS SPACE KEY TO CONTINUE';
 
       this.ctx.font = '18px Impact';
       this.ctx.fillStyle = '#dab821';
-      this.ctx.strokeStyle = '#000';
       this.ctx.textBaseline = 'top';
 
       x = (canvas.width / 2) - (this.ctx.measureText(text).width / 2);
       y = canvas.height - 100;
 
-      this.ctx.shadowColor = 'black';
-      this.ctx.shadowOffsetX = 3;
-      this.ctx.shadowOffsetY = 3;
-      this.ctx.shadowBlur = 7;
-      this.ctx.fillText(text, x, y);
-      this.ctx.strokeText(text, x, y);
-      this.ctx.shadowColor = 'transparent';
+      this.renderText(text, x, y);
     }
   }
 
@@ -368,44 +358,28 @@ class Game {
 
     this.ctx.font = '64px Impact';
     this.ctx.fillStyle = '#dab821';
-    this.ctx.strokeStyle = '#000';
     this.ctx.textBaseline = 'top';
 
     const text = 'YOU LOST';
     const x = (canvas.width / 2) - (this.ctx.measureText(text).width / 2);
     const y = 50;
 
-    this.ctx.shadowColor = 'black';
-    this.ctx.shadowOffsetX = 3;
-    this.ctx.shadowOffsetY = 3;
-    this.ctx.shadowBlur = 7;
-    this.ctx.fillText(text, x, y);
-    this.ctx.strokeText(text, x, y);
-
-    this.ctx.shadowColor = 'transparent';
+    this.renderText(text, x, y);
   }
 
   renderIntro() {
-    this.ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+    this.ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
     this.ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     this.ctx.font = '74px Impact';
     this.ctx.fillStyle = '#dab821';
-    this.ctx.strokeStyle = '#000';
     this.ctx.textBaseline = 'top';
 
     const text = 'LOST LUGGAGE';
     const x = (canvas.width / 2) - (this.ctx.measureText(text).width / 2);
-    const y = 50;
+    const y = (canvas.height / 2) - 74;
 
-    this.ctx.shadowColor = 'black';
-    this.ctx.shadowOffsetX = 3;
-    this.ctx.shadowOffsetY = 3;
-    this.ctx.shadowBlur = 7;
-    this.ctx.fillText(text, x, y);
-    this.ctx.strokeText(text, x, y);
-
-    this.ctx.shadowColor = 'transparent';
+    this.renderText(text, x, y);
   }
 
   renderTutorial() {
@@ -415,9 +389,9 @@ class Game {
 
     if (this.tutorial[0].id !== 0) {
       this.ctx.fillStyle = '#000';
-      this.ctx.strokeStyle = '#fff';
-      this.ctx.fillRect((canvas.width / 2) - 200, 50, 400, text.length * 21);
-      this.ctx.strokeRect((canvas.width / 2) - 200, 50, 400, text.length * 21);
+      this.ctx.strokeStyle = '#dab821';
+      this.ctx.fillRect((canvas.width / 2) - 200, 50, 400, text.length * 22);
+      this.ctx.strokeRect((canvas.width / 2) - 200, 50, 400, text.length * 22 );
     }
 
     let x;
@@ -425,18 +399,13 @@ class Game {
     text.forEach((t, index) => {
       this.ctx.font = '18px Impact';
       this.ctx.fillStyle = '#dab821';
-      this.ctx.strokeStyle = '#000';
       this.ctx.textBaseline = 'top';
       x = (canvas.width / 2) - (this.ctx.measureText(t).width / 2);
-
       y = canvas.height - 100;
 
       if (this.tutorial[0].id !== 0) y = 50 + (index * 20);
 
-      this.ctx.fillStyle = '#dab821';
-      this.ctx.strokeStyle = '#000';
-      this.ctx.fillText(t, x + 5, y + 3);
-      this.ctx.strokeText(t, x + 5, y + 3);
+      this.renderText(t, x + 5, y + 3);
     });
   }
 
