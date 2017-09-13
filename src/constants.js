@@ -62,7 +62,7 @@ export const HIDE = 'HIDE';
 export const S_D_P = 3000;
 
 // HUD
-export const HTH = 20;
+export const HTH = 30;
 export const HBH = 20;
 export const TRH = 18;
 

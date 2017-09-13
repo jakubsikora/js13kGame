@@ -94,17 +94,18 @@ export default class Hud {
     this.ctx.strokeStyle = '#464243';
     this.ctx.strokeRect(0, 0, canvas.width, HTH);
 
+    const gradient = this.ctx.createLinearGradient(0, 0 , 0 , HTH / 2);
+    gradient.addColorStop(0, '#f9f9f9');
+    gradient.addColorStop(1, '#f0f0f9');
+
+    this.ctx.fillStyle = gradient;
+    this.ctx.fillRect(0, 0, canvas.width, HTH);
+
     this.renderTime();
     this.renderGeneralInfo();
   }
 
   renderBottom() {
-    const height = HBH;
-    const y = canvas.height - height;
-
-    this.ctx.strokeStyle = '#464243';
-    this.ctx.strokeRect(0, y, canvas.width, height);
-
     this.renderFlightTable();
     this.renderSelectedPassengerInfo();
   }
@@ -113,14 +114,14 @@ export default class Hud {
     let x = 0;
     const y = 1;
 
-    this.ctx.font = '16px Helvetica';
-    this.ctx.fillStyle = '#dab821';
+    this.ctx.font = '14px \'Impact\'';
+    this.ctx.fillStyle = '#5c5c5c';
     this.ctx.textBaseline = 'top';
     const text = this.ctx.measureText(this.time);
 
     x = C_W - text.width - 1;
 
-    this.ctx.fillText(this.time, x, y);
+    this.ctx.fillText(this.time, x, y + 5);
   }
 
   renderGeneralInfo() {
@@ -128,29 +129,32 @@ export default class Hud {
     const y = 1;
     const offset = 20;
 
-    this.ctx.font = '16px Helvetica';
-    this.ctx.fillStyle = '#dab821';
+    this.ctx.font = '14px \'Impact\'';
+    this.ctx.fillStyle = '#5c5c5c';
     this.ctx.textBaseline = 'top';
 
-    const flightLandedText = `Flights landed: ${this.countLanded()}/${this.flights.length}`;
-    this.ctx.fillText(flightLandedText, x, y);
+    const flightLandedText = `🛬   ${this.countLanded()}/${this.flights.length}`;
+    this.ctx.fillText(flightLandedText, x + 3, y + 5);
 
-    const lostLuggageText = `Lost luggages: ${this.lostLuggages.length}/${config[level.id].lost}`;
+    const waitingPassengersText = `👤  ${this.waitingPassengers.length}`;
     x += this.ctx.measureText(flightLandedText).width + offset;
-    this.ctx.fillStyle = '#ff0000';
-    this.ctx.fillText(lostLuggageText, x, y);
 
-    const waitingPassengersText = `Waiting passengers: ${this.waitingPassengers.length}`;
-    x += this.ctx.measureText(lostLuggageText).width + offset;
+    this.ctx.fillText(waitingPassengersText, x, y + 5);
 
-    this.ctx.fillStyle = '#dab821';
-    this.ctx.fillText(waitingPassengersText, x, y);
-
-    const luggageLoopText = `Luggage loop: ${config[level.id].loop}`;
+    const luggageLoopText = `🔁   ${config[level.id].loop}`;
     x += this.ctx.measureText(waitingPassengersText).width + offset;
 
-    this.ctx.fillStyle = '#dab821';
-    this.ctx.fillText(luggageLoopText, x, y);
+    this.ctx.fillText(luggageLoopText, x, y + 5);
+
+    const remaining = config[level.id].lost - this.lostLuggages.length;
+    let text = '';
+
+    for (let i = 0; i < remaining; i++) {
+      text += ' 💼  ';
+    }
+
+    x = canvas.width - 150;
+    this.ctx.fillText(text, x, y + 4);
   }
 
   renderFlightTable() {
@@ -158,18 +162,13 @@ export default class Hud {
     let x = C_W - width;
     let y = C_H - HBH;
 
-    this.ctx.font = '16px Helvetica';
     this.ctx.fillStyle = '#dab821';
-    this.ctx.textBaseline = 'top';
-
-    this.ctx.strokeStyle = '#464243';
-    this.ctx.strokeRect(x, y, width, HBH);
 
     const flights = [...this.flights];
     flights.reverse();
 
     flights.forEach(f => {
-      this.ctx.font = '12px Helvetica';
+      this.ctx.font = '12px Impact';
       y -= TRH;
       this.ctx.strokeStyle = '#464243';
       this.ctx.strokeRect(x, y, width, TRH);
@@ -197,8 +196,8 @@ export default class Hud {
     this.ctx.strokeStyle = '#464243';
     this.ctx.strokeRect(x, y, width, TRH);
 
-    this.ctx.font = '16px Helvetica';
-    const text = 'Arrivals';
+    this.ctx.font = '14px Impact';
+    const text = 'ARRIVALS';
     const textX = x + (width / 2) - (this.ctx.measureText(text).width / 2);
     const textY = y;
     this.ctx.fillText(text, textX, textY);
@@ -211,14 +210,14 @@ export default class Hud {
     let x = 0;
     let y = C_H - 150;
 
-    this.ctx.font = '12px Helvetica';
-    this.ctx.fillStyle = '#fff';
+    this.ctx.fillStyle = '#f9f9f9';
+    this.ctx.fillRect(x, y, width, 120);
+
+    this.ctx.font = '13px Impact';
+    this.ctx.fillStyle = '#5c5c5c';
     this.ctx.textBaseline = 'top';
 
-    this.ctx.strokeStyle = '#464243';
-    this.ctx.strokeRect(x, y, width, 150);
-
-    let text = 'Passenger Info';
+    let text = 'PASSENGER INFO';
     let textX = x + (width / 2) - (this.ctx.measureText(text).width / 2);
     let textY = y + 2;
 
@@ -253,7 +252,11 @@ export default class Hud {
       if (!l.collected) luggageLeft++;
     });
 
-    text = `Luggages left: ${luggageLeft}`;
+    text = '';
+    for (let i = 0; i < luggageLeft; i++) {
+      text += ' 💼  ';
+    }
+
     textX = x + 2;
     textY = textY + 20;
 
