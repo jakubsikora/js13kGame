@@ -25,6 +25,9 @@ module.exports = function () {
           warnings: false,
         },
         sourceMap: false,
+        output: {
+          ascii_only: true,
+        },
       }),
       new ZipPlugin({
         filename: 'game.zip',
