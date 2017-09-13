@@ -42,7 +42,6 @@ export default class Belt {
     }
 
     map.grid[BELT_L - 1][this.pos - 1] = T_T_B;
-    map.grid[BELT_L - 2][this.pos - 1] = T_T_B_N;
     map.grid[1][this.pos - 1] = T_T_P;
 
 

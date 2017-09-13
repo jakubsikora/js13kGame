@@ -1,7 +1,6 @@
 import raf from 'raf';
 import canvas from './canvas';
 import config from './config';
-import keys from './keys';
 import map from './map';
 import Belt from './belt';
 import assets from './assets';
@@ -20,12 +19,12 @@ import {
 
 class Game {
   constructor() {
-    this.keys = keys;
     this.ctx = canvas.getContext('2d');
     this.assets = assets;
     this.loaded = this.assets.loaded;
 
     this.noMoreLevels = false;
+    this.mouseDown = false;
 
     this.setEventHandlers();
     this.map = map;
@@ -34,28 +33,28 @@ class Game {
 
     this.tutorial = [{
       id: 0,
-      text: ['PRESS SPACE KEY TO START'],
+      text: ['ClICK MOUSE TO START'],
     }, {
       id: 1,
       text: [
         'Tutorial 1/3',
-        'Click on the passenger',
+        'Click on the passenger.',
       ],
     }, {
       id: 2,
       text: [
         'Tutorial 2/3',
-        'Passenger info will show its luggage.',
+        'Passenger info will show its  💼',
         'Click close to the belt to collect it.',
-        'On the top bar you can see luggage loop limit.',
-        'Luggage will be lost if you won\'t make it.',
-        '(not during tutorial)',
+        'On the top left bar you can see luggage loop limit  🔁',
       ],
     }, {
       id: 3,
       text: [
         'Tutorial 3/3',
-        'When all luggages are collected, ',
+        'Luggage will be lost if you won\'t make it.',
+        'On the top right you can see max of lost  💼',
+        'When all  💼  are collected, ',
         'the passenger will leave the terminal.',
       ],
     }];
@@ -146,7 +145,7 @@ class Game {
           this.checkWin();
         }
       } else {
-        if (keys.isPressed(32)) {
+        if (this.mouseDown) {
           this.pause = false;
         }
       }
@@ -255,7 +254,7 @@ class Game {
   }
 
   update() {
-    if (!this.ready && keys.isPressed(32)) {
+    if (!this.ready && this.mouseDown) {
       if (this.tutorial.length) this.tutorial.shift();
       this.ready = true;
     }
@@ -325,21 +324,18 @@ class Game {
   }
 
   renderLevelWin() {
-    this.ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
-    this.ctx.fillRect(0, 0, canvas.width, canvas.height);
-
     this.ctx.font = '64px Impact';
     this.ctx.fillStyle = '#dab821';
     this.ctx.textBaseline = 'top';
 
     let text = this.noMoreLevels ? 'ALL LEVELS COMPLETED' : 'LEVEL COMPLETED';
     let x = (canvas.width / 2) - (this.ctx.measureText(text).width / 2);
-    let y = 50;
+    let y = (canvas.height / 2) - 64;
 
     this.renderText(text, x, y);
 
     if (!this.noMoreLevels) {
-      text = 'PRESS SPACE KEY TO CONTINUE';
+      text = 'ClICK MOUSE TO CONTINUE';
 
       this.ctx.font = '18px Impact';
       this.ctx.fillStyle = '#dab821';
@@ -390,8 +386,8 @@ class Game {
     if (this.tutorial[0].id !== 0) {
       this.ctx.fillStyle = '#000';
       this.ctx.strokeStyle = '#dab821';
-      this.ctx.fillRect((canvas.width / 2) - 200, 50, 400, text.length * 22);
-      this.ctx.strokeRect((canvas.width / 2) - 200, 50, 400, text.length * 22 );
+      this.ctx.fillRect((canvas.width / 2) - 200, 50, 420, text.length * 23);
+      this.ctx.strokeRect((canvas.width / 2) - 200, 50, 420, text.length * 23);
     }
 
     let x;
@@ -442,7 +438,12 @@ class Game {
   }
 
   setEventHandlers() {
+    canvas.addEventListener('mouseup', e => {
+      this.mouseDown = false;
+    });
+
     canvas.addEventListener('mousedown', e => {
+      this.mouseDown = true;
       if (!this.ready) return;
 
       const coords = canvas.getBoundingClientRect();

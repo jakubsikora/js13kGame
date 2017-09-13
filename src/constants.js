@@ -43,7 +43,7 @@ export const A_SPRITESHEET = 12;
 export const TILES_WALK = [AF, A_LOBBY];
 
 // Luggage
-export const P_M_O = 20;
+export const P_M_O = 30;
 
 // Belt
 export const BELT_D = 1;

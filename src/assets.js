@@ -4,7 +4,6 @@ import {
   AB,
   AB_START,
   AB_END,
-  ABN,
   A_LOBBY,
   A_LOBBY_WALL,
   A_SPRITESHEET,
@@ -15,7 +14,6 @@ import {
   T_T_B,
   T_T_B_S,
   T_T_B_E,
-  T_T_B_N,
   T_T_L,
   T_T_L_W,
   T_T_E,
@@ -59,7 +57,6 @@ class Assets {
       src: require('./assets/spritesheet.png'),
     }, {
       name: AB,
-      bgColor: '#607d8b',
       type: T_T_B,
       render(x, y, w, h, ctx) {
         const d = 10;
@@ -114,7 +111,6 @@ class Assets {
       },
     }, {
       name: A_LOBBY_WALL,
-      bgColor: '#607d8b',
       type: T_T_L_W,
       render(x, y, w, h, ctx) {
         const d = 20;
@@ -173,7 +169,6 @@ class Assets {
       },
     }, {
       name: AB_START,
-      bgColor: '#b1bdc3',
       type: T_T_B_S,
       render(x, y, w, h, ctx) {
         const x1 = x;
@@ -196,7 +191,6 @@ class Assets {
       },
     }, {
       name: AB_END,
-      bgColor: '#b78d8d',
       type: T_T_B_E,
       render(x, y, w, h, ctx) {
         const x1 = x;
@@ -299,7 +293,6 @@ class Assets {
       },
     }, {
       name: A_WALL_N,
-      bgColor: '#ff0000',
       type: T_T_WN,
       render(x, y, w, h, ctx) {
         const x1 = x;
@@ -322,7 +315,6 @@ class Assets {
       },
     }, {
       name: A_WALL_E,
-      bgColor: '#ffff00',
       type: T_T_WE,
       render(x, y, w, h, ctx) {
         const x1 = x;
@@ -341,61 +333,6 @@ class Assets {
         ctx.fillStyle = GLASS_C;
         ctx.strokeStyle = GLASS_STROKE_C;
         ctx.stroke();
-        ctx.fill();
-      },
-    }, {
-      name: ABN,
-      bgColor: '#607d8b',
-      type: T_T_B_N,
-      render(x, y, w, h, ctx) {
-        const d = 10;
-        const x1 = x;
-        const y1 = y;
-        const cx1 = x1 + (w * 0.5);
-        const cy1 = y1 + (h * 0.5);
-        ctx.beginPath();
-        ctx.moveTo(cx1, y1);
-        ctx.lineTo(x1 + w, cy1);
-        ctx.lineTo(cx1, y1 + h);
-        ctx.lineTo(x1, cy1);
-        ctx.closePath();
-
-        ctx.lineWidth = 1;
-        ctx.fillStyle = '#403f3f';
-        ctx.fill();
-
-        const x2 = x;
-        const y2 = y - d;
-        const cx2 = x2 + (w * 0.5);
-        const cy2 = y2 + (h * 0.5);
-        ctx.beginPath();
-        ctx.moveTo(cx2, y2);
-        ctx.lineTo(x2 + w, cy2);
-        ctx.lineTo(cx2, y2 + h);
-        ctx.lineTo(x2, cy2);
-        ctx.closePath();
-
-        ctx.fillStyle = '#fff000';
-        ctx.fill();
-
-        ctx.beginPath();
-        ctx.moveTo(x1 + w, cy1);
-        ctx.lineTo(x2 + w, cy2);
-        ctx.lineTo(cx2, y2 + h);
-        ctx.lineTo(cx1, y1 + h);
-        ctx.closePath();
-
-        ctx.fillStyle = '#6f6d6e';
-        ctx.fill();
-
-        ctx.beginPath();
-        ctx.moveTo(x2, cy2);
-        ctx.lineTo(x1, cy1);
-        ctx.lineTo(cx1, y1 + h);
-        ctx.lineTo(cx2, y2 + h);
-        ctx.closePath();
-
-        ctx.fillStyle = '#6f6d6e';
         ctx.fill();
       },
     }];
