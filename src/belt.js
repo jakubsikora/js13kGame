@@ -3,11 +3,11 @@ import map from './map';
 import Path from './path';
 import {
   BELT_L,
-  TILE_TYPE_BELT,
-  TILE_TYPE_BELT_START,
-  TILE_TYPE_BELT_END,
-  TILE_TYPE_BELT_NUMBER,
-  TILE_TYPE_PATH,
+  T_T_B,
+  T_T_B_START,
+  T_T_B_END,
+  T_T_B_NUMBER,
+  T_T_P,
   SPAWN_DELAY_BELT } from './constants';
 
 export default class Belt {
@@ -31,33 +31,33 @@ export default class Belt {
       if (index === 1) {
         row.forEach((x, ridx) => {
           if (this.end[1] <= ridx && this.start[1] >= ridx) {
-            map.grid[index][ridx] = TILE_TYPE_BELT;
+            map.grid[index][ridx] = T_T_B;
           }
         });
       }
     });
 
     for (let x = 1; x < BELT_L; x++) {
-      map.grid[x][this.pos] = TILE_TYPE_BELT;
+      map.grid[x][this.pos] = T_T_B;
     }
 
-    map.grid[BELT_L - 1][this.pos - 1] = TILE_TYPE_BELT;
-    map.grid[BELT_L - 2][this.pos - 1] = TILE_TYPE_BELT_NUMBER;
-    map.grid[1][this.pos - 1] = TILE_TYPE_PATH;
+    map.grid[BELT_L - 1][this.pos - 1] = T_T_B;
+    map.grid[BELT_L - 2][this.pos - 1] = T_T_B_NUMBER;
+    map.grid[1][this.pos - 1] = T_T_P;
 
 
     for (let x = 1; x < BELT_L; x++) {
-      map.grid[x][this.pos - 2] = TILE_TYPE_BELT;
+      map.grid[x][this.pos - 2] = T_T_B;
     }
 
-    map.grid[this.start[0]][this.start[1]] = TILE_TYPE_BELT_START;
-    map.grid[this.end[0]][this.end[1]] = TILE_TYPE_BELT_END;
+    map.grid[this.start[0]][this.start[1]] = T_T_B_START;
+    map.grid[this.end[0]][this.end[1]] = T_T_B_END;
 
     const path = new Path(
       this.start,
       this.end,
       map.grid,
-      [TILE_TYPE_BELT, TILE_TYPE_BELT_START, TILE_TYPE_BELT_END],
+      [T_T_B, T_T_B_START, T_T_B_END],
     );
 
     this.path = path.findShortestPath();

@@ -1,5 +1,5 @@
 const cities = ['London', 'Warsaw', 'Paris', 'Berlin', 'Madrid', 'Moscow',
-'New York', 'Chicago', 'Glasgow', 'Dublin'];
+  'Rome', 'Chicago', 'Glasgow', 'Dublin'];
 
 function checkTime(i) {
   if (i < 10) i = `0${i}`;

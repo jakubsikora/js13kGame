@@ -4,7 +4,7 @@ import map from './map';
 import config from './config';
 import level from './level';
 import {
-  A_LUGGAGE,
+  A_SPRITESHEET,
 } from './constants';
 
 const IMAGE_WIDTH = 20;
@@ -30,7 +30,7 @@ export default class Luggage {
     this.moving = false;
     this.speed = config[level.id].luggage.speed;
     this.loop = config[level.id].loop;
-    this.image = assets.getByName(A_LUGGAGE).img;
+    this.image = assets.getByName(A_SPRITESHEET).img;
 
     this.reset = false;
     this.lost = false;
@@ -44,10 +44,9 @@ export default class Luggage {
     return [this.x - (this.w / 2), this.y - (this.h / 2)];
   }
 
-  // TODO: randomize size/color etc.
   randomize() {
     const index = Math.floor(Math.random() * 4);
-    console.log(index);
+
     this.directionMap = {
       S: {
         w: IMAGE_WIDTH,
@@ -79,7 +78,6 @@ export default class Luggage {
   followPath() {
     if (!this.nextTile) {
       if ((this.loop > 0 && this.reset)) {
-        // TODO: timeout or fake return
         if (level.id !== 0) this.loop--;
 
         this.path = {
@@ -177,12 +175,6 @@ export default class Luggage {
 
     this.directionCoords = this.directionMap[this.direction];
 
-    // this.ctx.fillStyle = this.color;
-    // this.ctx.fillRect(
-    //   this.realPosition[0] - 5,
-    //   this.realPosition[1] - 10,
-    //   this.w,
-    //   this.h);
     this.ctx.drawImage(
       this.image,
       this.directionCoords.x,

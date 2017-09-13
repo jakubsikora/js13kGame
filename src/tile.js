@@ -1,4 +1,4 @@
-import { TILE_WIDTH, TILE_HEIGHT } from './constants';
+import { T_W, T_H } from './constants';
 
 export default class Tile {
   constructor(canvas, x, y, asset, gridX, gridY) {
@@ -8,8 +8,8 @@ export default class Tile {
     this.x = x;
     this.y = y;
 
-    this.centerX = x + (TILE_WIDTH * 0.5);
-    this.centerY = y + (TILE_HEIGHT * 0.5);
+    this.centerX = x + (T_W * 0.5);
+    this.centerY = y + (T_H * 0.5);
 
     this.asset = asset;
     this.hovered = false;
@@ -21,14 +21,14 @@ export default class Tile {
   renderRaw() {
     this.ctx.beginPath();
     this.ctx.moveTo(this.centerX, this.y);
-    this.ctx.lineTo(this.x + TILE_WIDTH, this.centerY);
-    this.ctx.lineTo(this.centerX, this.y + TILE_HEIGHT);
+    this.ctx.lineTo(this.x + T_W, this.centerY);
+    this.ctx.lineTo(this.centerX, this.y + T_H);
     this.ctx.lineTo(this.x, this.centerY);
     this.ctx.lineWidth = 1;
     this.ctx.closePath();
   }
 
-  render() {
+  render(data) {
     if (this.asset.img) {
       // Underlay
       this.renderRaw();
@@ -42,7 +42,7 @@ export default class Tile {
       );
     } else {
       if (this.asset.render) {
-        this.asset.render(this.x, this.y, TILE_WIDTH, TILE_HEIGHT, this.ctx);
+        this.asset.render(this.x, this.y, T_W, T_H, this.ctx, data);
       } else {
         this.renderRaw();
         this.ctx.fillStyle = this.asset.bgColor;
@@ -68,6 +68,6 @@ export default class Tile {
     const dx = Math.abs(x - this.centerX);
     const dy = Math.abs(y - this.centerY);
 
-    return ((dx / (TILE_WIDTH * 0.5)) + (dy / (TILE_HEIGHT * 0.5)) <= 1);
+    return ((dx / (T_W * 0.5)) + (dy / (T_H * 0.5)) <= 1);
   }
 }

@@ -106,7 +106,6 @@ export default class Path {
         location.distanceFromLeft >= gridSize ||
         location.distanceFromTop < 0 ||
         location.distanceFromTop >= gridSize) {
-
       // location is not on the grid--return false
       return PATH_LOCATION_STATUS_INVALID;
     } else if (this.validType.indexOf(grid[dft][dfl]) === -1) {
@@ -140,7 +139,7 @@ export default class Path {
       distanceFromTop: dft,
       distanceFromLeft: dfl,
       path: newPath,
-      status: 'Unknown'
+      status: 'Unknown',
     };
 
     newLocation.status = this.locationStatus(newLocation, grid);

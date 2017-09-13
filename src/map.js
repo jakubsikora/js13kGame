@@ -1,16 +1,18 @@
 import {
-  TILE_HEIGHT,
-  TILE_WIDTH,
-  MAP_ROWS,
-  MAP_COLS,
-  TILE_TYPE_PATH,
+  T_H,
+  T_W,
+  M_R,
+  M_C,
+  T_T_P,
   TILE_TYPE_LOBBY,
   TILE_TYPE_EXIT,
   TILE_TYPE_WALL_N,
   TILE_TYPE_WALL_E,
-  CANVAS_WIDTH,
-  CANVAS_HEIGHT,
+  TILE_TYPE_LOBBY_WALL,
+  C_W,
+  C_H,
   TILES_WALK,
+  A_BELT,
 } from './constants';
 import Tile from './tile';
 import assets from './assets';
@@ -24,16 +26,13 @@ class Map {
     this.tileGraphics = [];
     this.assets = assets;
     this.grid = [];
-    this.rows = MAP_ROWS;
-    this.cols = MAP_COLS;
+    this.rows = M_R;
+    this.cols = M_C;
 
     canvas.addEventListener('mousemove', e => {
       const coords = canvas.getBoundingClientRect();
       const x = e.clientX - coords.left;
       const y = e.clientY - coords.top;
-
-      // const x = CANVAS_WIDTH * (e.pageX - coords.left) / coords.width;
-      // const y = CANVAS_HEIGHT * (e.pageY - coords.top) / coords.height;
 
       this.tiles.forEach(tile => {
         if (tile.isInside(x, y) && TILES_WALK.indexOf(tile.asset.name) > -1) {
@@ -47,8 +46,8 @@ class Map {
 
   load() {
     this.tiles = [];
-    const offsetX = (this.canvas.width / 2) - (TILE_WIDTH / 2);
-    const offsetY = (this.canvas.height - (TILE_HEIGHT * this.rows)) / 2;
+    const offsetX = (this.canvas.width / 2) - (T_W / 2);
+    const offsetY = (this.canvas.height - (T_H * this.rows)) / 2;
 
     // loop through our map and draw out the image represented by the number.
     for (let i = 0; i < this.grid.length; i++) {
@@ -58,8 +57,8 @@ class Map {
         const asset = this.assets.getByType(tileType);
         const tile = new Tile(
           this.canvas,
-          (x * TILE_HEIGHT) + offsetX,
-          (y * TILE_HEIGHT) + offsetY,
+          (x * T_H) + offsetX,
+          (y * T_H) + offsetY,
           asset,
           i,
           j,
@@ -98,16 +97,18 @@ class Map {
     for (let x = 0; x < this.rows; x++) {
       this.grid.push([]);
       for (let y = 0; y < this.cols; y++) {
-        if (y === 0 && x === 10) {
+        if (y === 0 && (x === 10 || x === 11)) {
           this.grid[x].push(TILE_TYPE_EXIT);
         } else if (y === 0) {
           this.grid[x].push(TILE_TYPE_WALL_N);
         } else if (x === 0) {
           this.grid[x].push(TILE_TYPE_WALL_E);
-        } else if (x === this.cols - 1 || x === this.cols - 2) {
+        } else if (y > 3 && (x === this.cols - 1 || x === this.cols - 2)) {
           this.grid[x].push(TILE_TYPE_LOBBY);
+        } else if (y > 3 && (x === this.cols - 3)) {
+          this.grid[x].push(TILE_TYPE_LOBBY_WALL);
         } else {
-          this.grid[x].push(TILE_TYPE_PATH);
+          this.grid[x].push(T_T_P);
         }
       }
     }

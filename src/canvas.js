@@ -1,12 +1,12 @@
 import {
-  CANVAS_HEIGHT,
-  CANVAS_WIDTH } from './constants';
+  C_H,
+  C_W } from './constants';
 
 class Canvas {
   constructor() {
     this.instance = document.getElementById('canvas');
-    this.instance.width = CANVAS_WIDTH;
-    this.instance.height = CANVAS_HEIGHT;
+    this.instance.width = C_W;
+    this.instance.height = C_H;
   }
 }
 

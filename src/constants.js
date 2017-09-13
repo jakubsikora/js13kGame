@@ -1,23 +1,24 @@
 // Canvas
-export const CANVAS_HEIGHT = 600;
-export const CANVAS_WIDTH = 800;
+export const C_H = 600;
+export const C_W = 800;
 
 // Map
-export const MAP_ROWS = 16;
-export const MAP_COLS = 16;
+export const M_R = 16;
+export const M_C = 16;
 
 // Tiles
-export const TILE_HEIGHT = 26;
-export const TILE_WIDTH = 52;
-export const TILE_TYPE_PATH = 1;
-export const TILE_TYPE_BELT = 2;
-export const TILE_TYPE_BELT_START = 3;
-export const TILE_TYPE_BELT_END = 4;
+export const T_H = 26;
+export const T_W = 52;
+export const T_T_P = 1;
+export const T_T_B = 2;
+export const T_T_B_START = 3;
+export const T_T_B_END = 4;
 export const TILE_TYPE_LOBBY = 5;
 export const TILE_TYPE_EXIT = 6;
 export const TILE_TYPE_WALL_N = 7;
 export const TILE_TYPE_WALL_E = 8;
-export const TILE_TYPE_BELT_NUMBER = 9;
+export const T_T_B_NUMBER = 9;
+export const TILE_TYPE_LOBBY_WALL = 10;
 
 // Paths
 export const PATH_LOCATION_STATUS_INVALID = 'Invalid';
@@ -28,16 +29,18 @@ export const PATH_LOCATION_STATUS_END = 'End';
 
 // Assets
 export const A_FLOOR = 'Floor';
-export const A_CHARACTER = 'Character';
+export const A_PAX = 'Character';
 export const A_BELT = 'Belt';
 export const A_BELT_NUMBER = 'Belt Number';
 export const A_BELT_START = 'Belt Start';
 export const A_BELT_END = 'Belt End';
 export const A_LOBBY = 'Lobby';
+export const A_LOBBY_WALL = 'Lobby Wall';
 export const A_EXIT = 'Exit';
 export const A_WALL_N = 'WallN';
 export const A_WALL_E = 'WallE';
 export const A_LUGGAGE = 'Luggage';
+export const A_SPRITESHEET = 'Spritesheet';
 export const TILES_WALK = [A_FLOOR, A_LOBBY];
 
 // Luggage
@@ -73,6 +76,3 @@ export const GLASS_STROKE_COLOR = '#669595';
 export const FLOOR_COLOR = '#bab0ad';
 export const WALL_COLOR = '#939aa7';
 export const LOBBY_COLOR = '#4e5258';
-
-
-

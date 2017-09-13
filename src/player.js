@@ -7,10 +7,10 @@ import level from './level';
 import Path from './path';
 
 import {
-  A_CHARACTER,
+  A_PAX,
   PLAYER_MAP_OFFSET,
   A_LOBBY,
-  TILE_TYPE_PATH,
+  T_T_P,
   TILE_TYPE_EXIT,
 } from './constants';
 
@@ -27,7 +27,7 @@ export default class Player {
     this.speed = 1;
     this.map = map;
     this.direction = 'N';
-    this.image = assets.getByName(A_CHARACTER).img;
+    this.image = assets.getByName(A_PAX).img;
     this.frameIndex = 0;
     this.tickCount = 0;
     this.ticksPerFrame = 10;
@@ -177,7 +177,6 @@ export default class Player {
         }
       });
     } else {
-      console.log('going to exit');
       this.goToExit = true;
 
       this.changePath = true;
@@ -189,7 +188,7 @@ export default class Player {
         [this.nextTile[0], this.nextTile[1]],
         [tile.gridX, tile.gridY],
         this.map.grid,
-        [TILE_TYPE_PATH, TILE_TYPE_EXIT],
+        [T_T_P, TILE_TYPE_EXIT],
       );
 
       this.tempPath = tempPath.findShortestPath();

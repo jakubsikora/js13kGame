@@ -4,8 +4,8 @@ import canvas from './canvas';
 import {
   HUD_TOP_HEIGHT,
   HUD_BOTTOM_HEIGHT,
-  CANVAS_WIDTH,
-  CANVAS_HEIGHT,
+  C_W,
+  C_H,
   LANDED,
   TIMETABLE_ROW_HEIGHT,
 } from './constants';
@@ -119,7 +119,7 @@ export default class Hud {
     this.ctx.textBaseline = 'top';
     const text = this.ctx.measureText(this.time);
 
-    x = CANVAS_WIDTH - text.width - 1;
+    x = C_W - text.width - 1;
 
     this.ctx.fillText(this.time, x, y);
   }
@@ -156,8 +156,8 @@ export default class Hud {
 
   renderFlightTable() {
     const width = 250;
-    let x = CANVAS_WIDTH - width;
-    let y = CANVAS_HEIGHT - HUD_BOTTOM_HEIGHT;
+    let x = C_W - width;
+    let y = C_H - HUD_BOTTOM_HEIGHT;
 
     this.ctx.font = '16px Helvetica';
     this.ctx.fillStyle = '#dab821';
@@ -190,7 +190,7 @@ export default class Hud {
       this.ctx.fillText(flightText, tx, ty);
 
       flightText = f.status;
-      tx = CANVAS_WIDTH - this.ctx.measureText(flightText).width - 2;
+      tx = C_W - this.ctx.measureText(flightText).width - 2;
       this.ctx.fillText(flightText, tx, ty);
     });
 
@@ -210,7 +210,7 @@ export default class Hud {
 
     const width = 200;
     let x = 0;
-    let y = CANVAS_HEIGHT - 150;
+    let y = C_H - 150;
 
     this.ctx.font = '12px Helvetica';
     this.ctx.fillStyle = '#fff';

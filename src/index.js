@@ -6,15 +6,14 @@ import map from './map';
 import Belt from './belt';
 import assets from './assets';
 import Path from './path';
+import Signs from './signs';
 import Flight from './flight';
 import level from './level';
 import Hud from './hud';
 import {
-  TILE_TYPE_PATH,
+  T_T_P,
   TILE_TYPE_LOBBY,
-  MAP_ROWS,
-  CANVAS_WIDTH,
-  CANVAS_HEIGHT,
+  M_R,
   COMPLETED,
   WAITING,
   BG_COLOR } from './constants';
@@ -82,6 +81,7 @@ class Game {
     this.map.load();
 
     this.hud = new Hud(this.flights);
+    this.signs = new Signs();
 
     this.ready = false;
     this.win = false;
@@ -102,7 +102,7 @@ class Game {
     const number = config[level.id].belts;
 
     for (let i = 0; i < number; i++) {
-      const length = MAP_ROWS;
+      const length = M_R;
 
       const start = [0, Math.floor(i * (length / number))];
       const end = [0, Math.floor(length / number * (i + 1)) - 1];
@@ -300,9 +300,9 @@ class Game {
     this.ctx.strokeStyle = '#000';
     this.ctx.textBaseline = 'top';
 
-    let text = `LEVEL ${level.id} of ${config.length - 1}`;
-    let x = (canvas.width / 2) - (this.ctx.measureText(text).width / 2);
-    let y = 50;
+    const text = `LEVEL ${level.id} of ${config.length - 1}`;
+    const x = (canvas.width / 2) - (this.ctx.measureText(text).width / 2);
+    const y = 50;
 
     this.ctx.shadowColor = 'black';
     this.ctx.shadowOffsetX = 3;
@@ -371,9 +371,9 @@ class Game {
     this.ctx.strokeStyle = '#000';
     this.ctx.textBaseline = 'top';
 
-    let text = 'YOU LOST';
-    let x = (canvas.width / 2) - (this.ctx.measureText(text).width / 2);
-    let y = 50;
+    const text = 'YOU LOST';
+    const x = (canvas.width / 2) - (this.ctx.measureText(text).width / 2);
+    const y = 50;
 
     this.ctx.shadowColor = 'black';
     this.ctx.shadowOffsetX = 3;
@@ -455,6 +455,8 @@ class Game {
       b.render();
     });
 
+    this.signs.render();
+
     if (this.ready) this.hud.render();
 
     if (!this.ready) {
@@ -478,8 +480,6 @@ class Game {
       const x = e.clientX - coords.left;
       const y = e.clientY - coords.top;
 
-      // const x = CANVAS_WIDTH * (e.pageX - coords.left) / coords.width;
-      // const y = CANVAS_HEIGHT * (e.pageY - coords.top) / coords.height;
       map.tiles.forEach(tile => {
         if (tile.isInside(x, y)) {
           this.passengers.forEach(player => {
@@ -514,7 +514,7 @@ class Game {
                     [player.nextTile[0], player.nextTile[1]],
                     [tile.gridX, tile.gridY],
                     this.map.grid,
-                    [TILE_TYPE_PATH, TILE_TYPE_LOBBY],
+                    [T_T_P, TILE_TYPE_LOBBY],
                   );
 
                   player.tempPath = tempPath.findShortestPath();
@@ -524,7 +524,7 @@ class Game {
                   [player.playerTile.gridX, player.playerTile.gridY],
                   [tile.gridX, tile.gridY],
                   this.map.grid,
-                  [TILE_TYPE_PATH, TILE_TYPE_LOBBY],
+                  [T_T_P, TILE_TYPE_LOBBY],
                 );
 
                 player.path = path.findShortestPath();
@@ -545,10 +545,6 @@ class Game {
       const coords = canvas.getBoundingClientRect();
       const x1 = e.clientX - coords.left;
       const y1 = e.clientY - coords.top;
-
-      // const x1 = CANVAS_WIDTH * (e.pageX - coords.left) / coords.width;
-      // const y1 = CANVAS_HEIGHT * (e.pageY - coords.top) / coords.height;
-
       const mouseTile = map.getTileByCoords(x1, y1);
 
       let hovered = false;
